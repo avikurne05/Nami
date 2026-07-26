@@ -39,3 +39,11 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local build tools & credentials
+jdk17/
+platform-tools/
+platform-tools.zip
+.env
+*.Yfr6rRlPsQ7MUZsdV7aFsLQ5sVRqZmqlfBP4Rw_yXWo
+

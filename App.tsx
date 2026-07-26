@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import LocationService from './src/services/LocationService';
+import NotificationService from './src/services/NotificationService';
+import { AuthProvider } from './src/hooks/useAuth';
+import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
+  React.useEffect(() => {
+    async function initPermissions() {
+      try {
+        await LocationService.requestPermissions();
+        await NotificationService.registerForPushNotifications();
+      } catch (e) {
+        console.warn('Failed to initialize app permissions:', e);
+      }
+    }
+    initPermissions();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthProvider>
+      <AppNavigator />
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

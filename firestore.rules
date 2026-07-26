@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User Profiles
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Ride Sessions & Subcollections (locations, emergencies, hazards)
+    match /rides/{rideId} {
+      allow read, write: if request.auth != null;
+      
+      match /{allSubcollections=**} {
+        allow read, write: if request.auth != null;
+      }
+    }
+    
+    // Ride History Collection
+    match /ride_history/{historyId} {
+      // Users can read ride history documents where they are a listed member
+      allow read: if request.auth != null && request.auth.uid in resource.data.memberUids;
+      
+      // Allow creation of history documents upon ride completion
+      allow create: if request.auth != null;
+      
+      // Allow update of history documents if user is a member
+      allow update: if request.auth != null && request.auth.uid in resource.data.memberUids;
+      
+      // SECURITY RULE: Users can ONLY delete ride history documents that belong to them (where their UID is in memberUids)
+      allow delete: if request.auth != null && request.auth.uid in resource.data.memberUids;
+    }
+  }
+}
