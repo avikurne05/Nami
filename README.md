@@ -215,15 +215,6 @@ firebase deploy --only firestore:rules
 
 ---
 
-## 📚 SDE Interview Manual
-
-Included in this repository is the complete **Nami SDE Interview Preparation Guide**:
-* 📄 [**`Nami_SDE_Interview_Preparation_Guide.pdf`**](./Nami_SDE_Interview_Preparation_Guide.pdf) *(1.4 MB)*
-* 🌐 [**`nami_sde_interview_prep.html`**](./nami_sde_interview_prep.html)
-
-Contains full architectural deep dives, data flow traces, whiteboard Haversine derivations, Firestore consistency analyses, 50+ categorized interview questions, and speaking scripts.
-
----
 
 ## 👨‍💻 Author
 
