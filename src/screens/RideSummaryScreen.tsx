@@ -150,7 +150,7 @@ export default function RideSummaryScreen({ route, navigation }: Props) {
       const dest = summary?.destinationName || 'Destination';
 
       await Share.share({
-        message: `Ride Completed on BikeRadar!\n\nDestination: ${dest}\nDistance: ${distance} km\nDuration: ${duration}\nAvg Speed: ${Math.round(summary?.averageSpeed ?? 0)} km/h\n\nRide together with BikeRadar!`,
+        message: `Ride Completed on Nami!\n\nDestination: ${dest}\nDistance: ${distance} km\nDuration: ${duration}\nAvg Speed: ${Math.round(summary?.averageSpeed ?? 0)} km/h\n\nRide together with Nami!`,
       });
     } catch (e) {
       console.error('Failed to share ride summary:', e);

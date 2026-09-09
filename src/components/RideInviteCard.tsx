@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   Share,
   Clipboard,
-  Image,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { RideSession } from '../types';
 import { useTheme } from '../hooks/useTheme';
-import { generateBikerRadarQRPayload } from '../utils/qrCodeGenerator';
+import { generateNamiQRPayload } from '../utils/qrCodeGenerator';
 
 interface Props {
   ride: RideSession;
@@ -28,7 +27,6 @@ export function RideInviteCard({
   ride,
   joinedCount = 1,
   maxRiders = 8,
-  leaderPhotoURL,
   distanceKmText = '45 km',
   durationText = '1h 10m',
   onClose,
@@ -38,7 +36,7 @@ export function RideInviteCard({
 
   const qrPayloadString =
     ride.qrPayload ||
-    generateBikerRadarQRPayload(
+    generateNamiQRPayload(
       ride.id,
       ride.roomCode,
       ride.leaderId,
@@ -58,11 +56,11 @@ export function RideInviteCard({
 
   const handleShareRide = async () => {
     try {
-      const shareMessage = `🏍️ Join my Biker Radar Ride!\n\nRide:\n${ride.name}\n\nLeader:\n${ride.leaderName}\n\nDestination:\n${ride.destination?.name || 'Destination'}\n\nEstimated:\n${distanceKmText} • ${durationText}\n\nRoom Code:\n${ride.roomCode}\n\nScan the QR code inside Biker Radar or enter the 6-character room code to join!\nDownload Biker Radar to ride together.`;
+      const shareMessage = `🏍️ Join my Nami Ride!\n\nRide:\n${ride.name}\n\nLeader:\n${ride.leaderName}\n\nDestination:\n${ride.destination?.name || 'Destination'}\n\nEstimated:\n${distanceKmText} • ${durationText}\n\nRoom Code:\n${ride.roomCode}\n\nScan the QR code inside Nami or enter the 6-character room code to join!`;
 
       await Share.share({
         message: shareMessage,
-        title: `Join ${ride.name} on Biker Radar`,
+        title: `Join ${ride.name} on Nami`,
       });
     } catch (e) {
       console.warn('Share ride error:', e);
@@ -71,7 +69,7 @@ export function RideInviteCard({
 
   return (
     <View style={[styles.cardContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      {/* Top Header Row with Close Button */}
+      {/* 1. STATUS BADGES HEADER */}
       <View style={styles.headerRow}>
         <View style={styles.badgeRow}>
           <View style={[styles.statusBadge, { backgroundColor: isDark ? 'rgba(16,185,129,0.15)' : '#D1FAE5' }]}>
@@ -101,60 +99,11 @@ export function RideInviteCard({
         )}
       </View>
 
-      {/* Ride Title & Creation Info */}
+      {/* 2. RIDE TITLE & CREATION INFO */}
       <Text style={[styles.rideTitle, { color: colors.text }]}>{ride.name}</Text>
       <Text style={[styles.createdSub, { color: colors.textMuted }]}>Created today at {formattedTime}</Text>
 
-      {/* Leader & Destination Info Grid */}
-      <View style={[styles.metaBox, { backgroundColor: colors.background, borderColor: colors.border }]}>
-        <View style={styles.metaRow}>
-          <View style={styles.metaIconCol}>
-            {leaderPhotoURL ? (
-              <Image source={{ uri: leaderPhotoURL }} style={styles.leaderAvatar} />
-            ) : (
-              <View style={[styles.avatarBadge, { backgroundColor: colors.primary }]}>
-                <Text style={styles.avatarText}>{ride.leaderName?.charAt(0).toUpperCase() || 'L'}</Text>
-              </View>
-            )}
-          </View>
-          <View style={styles.metaTextCol}>
-            <Text style={[styles.metaLabel, { color: colors.textMuted }]}>LEADER</Text>
-            <Text style={[styles.metaVal, { color: colors.text }]}>{ride.leaderName}</Text>
-          </View>
-
-          <View style={styles.verticalDivider} />
-
-          <View style={styles.metaIconCol}>
-            <Ionicons name="flag-outline" size={20} color="#EF4444" />
-          </View>
-          <View style={styles.metaTextCol}>
-            <Text style={[styles.metaLabel, { color: colors.textMuted }]}>DESTINATION</Text>
-            <Text style={[styles.metaVal, { color: colors.text }]} numberOfLines={1}>
-              {ride.destination?.name || 'Destination'}
-            </Text>
-          </View>
-        </View>
-
-        <View style={[styles.horizontalDivider, { backgroundColor: colors.border }]} />
-
-        <View style={styles.metaRow}>
-          <View style={styles.metaTextCol}>
-            <Text style={[styles.metaLabel, { color: colors.textMuted }]}>ESTIMATED ROUTE</Text>
-            <Text style={[styles.metaVal, { color: colors.text }]}>
-              {distanceKmText} • {durationText}
-            </Text>
-          </View>
-
-          <View style={styles.metaTextCol}>
-            <Text style={[styles.metaLabel, { color: colors.textMuted }]}>RIDERS JOINED</Text>
-            <Text style={[styles.metaVal, { color: colors.primary, fontWeight: '800' }]}>
-              {joinedCount} / {maxRiders} Riders
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Vector SVG QR Code Container */}
+      {/* 3. LARGE QR CODE (PRIMARY VISUAL FOCUS) */}
       <View style={styles.qrSection}>
         <View style={[styles.qrFrame, { backgroundColor: '#FFFFFF', borderColor: colors.border }]}>
           <QRCode
@@ -165,11 +114,11 @@ export function RideInviteCard({
           />
         </View>
         <Text style={[styles.qrScanHint, { color: colors.textMuted }]}>
-          Scan with Biker Radar camera to join instantly
+          Scan with Nami to join instantly
         </Text>
       </View>
 
-      {/* Room Code Section */}
+      {/* 5. ROOM CODE SECTION */}
       <View style={[styles.roomCodeBox, { backgroundColor: isDark ? '#1E293B' : '#F1F5F9', borderColor: colors.border }]}>
         <Text style={[styles.roomCodeLabel, { color: colors.textMuted }]}>ROOM CODE</Text>
         <Text style={[styles.roomCodeText, { color: colors.primary }]}>{ride.roomCode}</Text>
@@ -183,7 +132,7 @@ export function RideInviteCard({
         </View>
       )}
 
-      {/* Action Buttons: Copy Code & Share Ride */}
+      {/* 6. ACTION BUTTONS */}
       <View style={styles.actionRow}>
         <TouchableOpacity
           style={[styles.btnSecondary, { backgroundColor: colors.background, borderColor: colors.border }]}
@@ -273,63 +222,8 @@ const styles = StyleSheet.create({
   createdSub: {
     fontSize: 12,
     marginTop: 2,
-    marginBottom: 16,
+    marginBottom: 14,
     textAlign: 'center',
-  },
-  metaBox: {
-    width: '100%',
-    borderRadius: 16,
-    borderWidth: 1,
-    padding: 14,
-    marginBottom: 18,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  metaIconCol: {
-    marginRight: 10,
-  },
-  leaderAvatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-  },
-  avatarBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  metaTextCol: {
-    flex: 1,
-  },
-  metaLabel: {
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 1,
-    marginBottom: 2,
-  },
-  metaVal: {
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  verticalDivider: {
-    width: 1,
-    height: 28,
-    backgroundColor: 'rgba(100, 116, 139, 0.2)',
-    marginHorizontal: 12,
-  },
-  horizontalDivider: {
-    height: 1,
-    marginVertical: 12,
   },
   qrSection: {
     alignItems: 'center',

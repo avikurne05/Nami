@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "bike-radar",
+    "name": "Nami",
     "slug": "bike-radar",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,9 +19,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.avinash.bikerradar",
       "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyArWOeLdY0dzzRERbCPtsPdSNUsvaHUSVg"
-        }
+        "googleMaps": {}
       },
       "permissions": [
         "ACCESS_FINE_LOCATION",
@@ -35,7 +33,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Biker Radar to access your location to track your squad distance.",
+          "locationAlwaysAndWhenInUsePermission": "Allow Nami to access your location to track your squad distance.",
           "isAndroidForegroundServiceEnabled": true
         }
       ],

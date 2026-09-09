@@ -180,6 +180,8 @@ export const BikerRadarEdgeIndicator: React.FC<Props> = ({
   );
 };
 
+export const NamiEdgeIndicator = BikerRadarEdgeIndicator;
+
 const styles = StyleSheet.create({
   frostedGlassPill: {
     position: 'absolute',

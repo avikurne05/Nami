@@ -1,11 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { Marker, AnimatedRegion } from 'react-native-maps';
 import { RiderLocation } from '../types';
 import { ColorPalette } from '../hooks/useTheme';
-
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Animated, Easing } from 'react-native';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 interface Props {
   rider: RiderLocation;
@@ -21,9 +19,10 @@ interface Props {
 
 export function getRiderColor(userId: string, isMe: boolean, isLeader: boolean, riderStatus?: string): string {
   if (riderStatus === 'sos') return '#EF4444';
-  if (isLeader) return '#2563EB'; // Blue = Leader
-  if (riderStatus === 'break' || riderStatus === 'stopped') return '#F59E0B'; // Yellow = Waiting/Break
-  return '#10B981'; // Green = Riding
+  if (isMe) return '#2563EB'; // Vibrant Blue for current user
+  if (isLeader) return '#3B82F6'; // Blue for Leader
+  if (riderStatus === 'break' || riderStatus === 'stopped') return '#F59E0B'; // Amber for Stopped/Break
+  return '#10B981'; // Emerald Green for Riding
 }
 
 export const AnimatedRiderMarker: React.FC<Props> = React.memo(
@@ -50,31 +49,16 @@ export const AnimatedRiderMarker: React.FC<Props> = React.memo(
       })
     );
 
-    // Pulsating blue glow animation for Leader
-    const glowAnim = useRef(new Animated.Value(0.4)).current;
+    // Dynamic track changes state to ensure crisp native render on Android without performance hit
+    const [tracksViewChanges, setTracksViewChanges] = useState(true);
 
     useEffect(() => {
-      if (isLeader) {
-        const animation = Animated.loop(
-          Animated.sequence([
-            Animated.timing(glowAnim, {
-              toValue: 1.0,
-              duration: 1000,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-            Animated.timing(glowAnim, {
-              toValue: 0.4,
-              duration: 1000,
-              easing: Easing.inOut(Easing.ease),
-              useNativeDriver: true,
-            }),
-          ])
-        );
-        animation.start();
-        return () => animation.stop();
-      }
-    }, [isLeader, glowAnim]);
+      setTracksViewChanges(true);
+      const timer = setTimeout(() => {
+        setTracksViewChanges(false);
+      }, 600);
+      return () => clearTimeout(timer);
+    }, [rider.photoURL, rider.heading, rider.speed, rider.network, isSelected, isMe, isLeader]);
 
     useEffect(() => {
       if (
@@ -89,7 +73,7 @@ export const AnimatedRiderMarker: React.FC<Props> = React.memo(
             longitude: rider.longitude,
             latitudeDelta: 0,
             longitudeDelta: 0,
-            duration: 850,
+            duration: 800,
             useNativeDriver: false,
           } as any)
           .start();
@@ -97,119 +81,152 @@ export const AnimatedRiderMarker: React.FC<Props> = React.memo(
     }, [rider.latitude, rider.longitude]);
 
     const badgeColor = getRiderColor(rider.userId, isMe, isLeader, rider.riderStatus);
-    const onlineDotColor = rider.network === 'online' ? '#10B981' : '#94A3B8';
+    const isOnline = rider.network === 'online';
     const initialLetter = rider.userName ? rider.userName.trim().charAt(0).toUpperCase() : 'R';
     const headingAngle = rider.heading != null && !isNaN(rider.heading) ? rider.heading : 0;
+
+    // Size dimensions
+    const avatarOuterSize = isMe ? 52 : 44;
+    const avatarImgSize = isMe ? 44 : 36;
+    const avatarRadius = avatarImgSize / 2;
 
     return (
       <Marker.Animated
         coordinate={animatedRegionRef.current as any}
-        anchor={isMe ? { x: 0.5, y: 1.15 } : { x: 0.5, y: 0.5 }}
-        tracksViewChanges={false}
-        zIndex={isMe ? 100 : isSelected ? 80 : isLeader ? 60 : 40}
+        anchor={{ x: 0.5, y: 0.5 }}
+        tracksViewChanges={tracksViewChanges}
+        zIndex={isMe ? 999 : isSelected ? 80 : isLeader ? 60 : 40}
         onPress={() => onPress && onPress(rider)}
       >
-        <View
-          style={[
-            styles.markerContainer,
-            isSelected && { transform: [{ scale: 1.15 }] },
-          ]}
-          collapsable={false}
-        >
-          {/* Outer Badge Wrapper */}
-          <View style={styles.badgeWrapper}>
-            {/* Leader Animated Blue Glow Ring */}
-            {isLeader && (
-              <Animated.View
-                style={[
-                  styles.leaderGlowRing,
-                  {
-                    opacity: glowAnim,
-                    transform: [
-                      {
-                        scale: glowAnim.interpolate({
-                          inputRange: [0.4, 1.0],
-                          outputRange: [1.0, 1.35],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-              />
-            )}
-
-            {/* Selected Glowing Ring */}
-            {isSelected && <View style={styles.selectedGlowRing} />}
-
-            {/* Circular Avatar Container (White background + Soft Shadow + 2.5dp status ring) */}
+        <View style={styles.rootContainer} collapsable={false}>
+          {/* Direction Heading Triangle (Rotates around center) */}
+          {headingAngle !== 0 && (
             <View
               style={[
-                styles.avatarRing,
-                {
-                  borderColor: badgeColor,
-                  borderWidth: isSelected ? 3.5 : 2.5,
-                  shadowColor: isSelected ? '#3B82F6' : badgeColor,
-                },
+                styles.headingContainer,
+                { transform: [{ rotate: `${headingAngle}deg` }] },
               ]}
             >
-              <View style={styles.innerWhiteCircle}>
-                {rider.photoURL ? (
-                  <Image source={{ uri: rider.photoURL }} style={styles.avatarImage} />
-                ) : (
-                  <Text style={styles.avatarLetter}>{initialLetter}</Text>
-                )}
-              </View>
-
-              {/* Status Dot */}
-              <View style={[styles.statusDot, { backgroundColor: onlineDotColor }]} />
+              <View style={[styles.headingPointer, { borderBottomColor: badgeColor }]} />
             </View>
+          )}
 
-            {/* Heading Direction Arrow Indicator (Rotating triangle around marker) */}
-            {headingAngle !== 0 && (
+          {/* Outer Pulsing Aura Ring for "Me" or Leader */}
+          {(isMe || isLeader || isSelected) && (
+            <View
+              style={[
+                styles.outerGlowRing,
+                {
+                  width: avatarOuterSize + 12,
+                  height: avatarOuterSize + 12,
+                  borderRadius: (avatarOuterSize + 12) / 2,
+                  borderColor: isMe ? 'rgba(37, 99, 235, 0.4)' : isSelected ? 'rgba(59, 130, 246, 0.4)' : 'rgba(37, 99, 235, 0.3)',
+                  backgroundColor: isMe ? 'rgba(37, 99, 235, 0.12)' : 'rgba(59, 130, 246, 0.1)',
+                },
+              ]}
+            />
+          )}
+
+          {/* Main Circular Puck */}
+          <View
+            style={[
+              styles.avatarPuck,
+              {
+                width: avatarOuterSize,
+                height: avatarOuterSize,
+                borderRadius: avatarOuterSize / 2,
+                borderColor: badgeColor,
+                borderWidth: isMe ? 3.5 : 2.5,
+                backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
+              },
+            ]}
+          >
+            {rider.photoURL ? (
+              <Image
+                source={{ uri: rider.photoURL }}
+                style={{
+                  width: avatarImgSize,
+                  height: avatarImgSize,
+                  borderRadius: avatarRadius,
+                }}
+                resizeMode="cover"
+              />
+            ) : (
               <View
                 style={[
-                  styles.headingIndicator,
-                  { transform: [{ rotate: `${headingAngle}deg` }] },
+                  styles.avatarFallback,
+                  {
+                    width: avatarImgSize,
+                    height: avatarImgSize,
+                    borderRadius: avatarRadius,
+                    backgroundColor: isMe ? '#2563EB' : isDark ? '#1E293B' : '#E2E8F0',
+                  },
                 ]}
               >
-                <View style={[styles.headingArrow, { borderBottomColor: badgeColor }]} />
+                <Text
+                  style={[
+                    styles.avatarLetter,
+                    {
+                      color: isMe ? '#FFFFFF' : isDark ? '#F8FAFC' : '#0F172A',
+                      fontSize: isMe ? 18 : 15,
+                    },
+                  ]}
+                >
+                  {initialLetter}
+                </Text>
               </View>
             )}
+
+            {/* Online / Battery Status Dot */}
+            <View
+              style={[
+                styles.statusDot,
+                {
+                  backgroundColor: isOnline ? '#10B981' : '#94A3B8',
+                  borderColor: isDark ? '#0F172A' : '#FFFFFF',
+                },
+              ]}
+            />
           </View>
 
-          {/* Small Pointer Triangle Below Circle */}
-          <View style={[styles.pointerTriangle, { borderTopColor: badgeColor }]} />
-
-          {/* Floating Speed Badge & Name Label (rendered based on zoom depth & selection) */}
+          {/* Floating Name & Speed Pill Label */}
           {(showNameLabel || showSpeedBadge || isSelected) && (
             <View
               style={[
-                styles.labelCard,
+                styles.labelPill,
                 {
-                  backgroundColor: isDark ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.95)',
-                  borderColor: isSelected ? '#3B82F6' : isLeader ? '#2563EB' : colors.border,
+                  backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                  borderColor: isMe ? '#2563EB' : isSelected ? '#3B82F6' : colors.border,
                 },
               ]}
             >
-              {(showNameLabel || isSelected) && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                  {isLeader && (
-                    <MaterialCommunityIcons name="crown" size={12} color="#3B82F6" style={{ marginRight: 3 }} />
-                  )}
-                  <Text
-                    style={[styles.nameText, { color: isDark ? '#F8FAFC' : '#0F172A' }]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {isMe ? 'You' : rider.userName}
-                  </Text>
-                </View>
-              )}
-              {(showSpeedBadge || isSelected) && (
-                <Text style={[styles.speedText, { color: badgeColor }]}>
-                  {rider.speed || 0} km/h
+              <View style={styles.labelRow}>
+                {isLeader && (
+                  <MaterialCommunityIcons
+                    name="crown"
+                    size={11}
+                    color="#F59E0B"
+                    style={{ marginRight: 3 }}
+                  />
+                )}
+                <Text
+                  style={[
+                    styles.nameLabel,
+                    {
+                      color: isMe ? '#2563EB' : isDark ? '#F8FAFC' : '#0F172A',
+                      fontWeight: isMe ? '900' : '700',
+                    },
+                  ]}
+                  numberOfLines={1}
+                >
+                  {isMe ? 'You' : rider.userName || 'Rider'}
                 </Text>
-              )}
+                {showSpeedBadge && (
+                  <Text style={[styles.speedLabel, { color: badgeColor }]}>
+                    {' '}{rider.speed || 0} km/h
+                  </Text>
+                )}
+              </View>
             </View>
           )}
         </View>
@@ -219,80 +236,23 @@ export const AnimatedRiderMarker: React.FC<Props> = React.memo(
 );
 
 const styles = StyleSheet.create({
-  markerContainer: {
+  rootContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: 100,
+    height: 100,
+    backgroundColor: 'transparent',
   },
-  badgeWrapper: {
+  headingContainer: {
+    position: 'absolute',
+    top: 6,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 24,
+    height: 24,
+    zIndex: 10,
   },
-  leaderGlowRing: {
-    position: 'absolute',
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: 'rgba(37, 99, 235, 0.45)',
-    borderWidth: 2,
-    borderColor: '#3B82F6',
-  },
-  selectedGlowRing: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(59, 130, 246, 0.25)',
-    borderWidth: 2,
-    borderColor: '#3B82F6',
-  },
-  avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.35,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  innerWhiteCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-  },
-  avatarLetter: {
-    color: '#0F172A',
-    fontSize: 17,
-    fontWeight: '900',
-  },
-  statusDot: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#0F172A',
-  },
-  headingIndicator: {
-    position: 'absolute',
-    top: -8,
-    alignItems: 'center',
-  },
-  headingArrow: {
+  headingPointer: {
     width: 0,
     height: 0,
     borderLeftWidth: 6,
@@ -301,39 +261,60 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
   },
-  pointerTriangle: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderTopWidth: 8,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    marginTop: -2,
+  outerGlowRing: {
+    position: 'absolute',
+    borderWidth: 2,
   },
-  labelCard: {
-    marginTop: 3,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    borderWidth: 1,
+  avatarPuck: {
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 54,
-    maxWidth: 110,
+    elevation: 8,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+  },
+  avatarFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarLetter: {
+    fontWeight: '900',
+  },
+  statusDot: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 13,
+    height: 13,
+    borderRadius: 6.5,
+    borderWidth: 2.5,
+  },
+  labelPill: {
+    position: 'absolute',
+    bottom: 2,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowRadius: 3,
   },
-  nameText: {
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameLabel: {
     fontSize: 11,
-    fontWeight: 'bold',
   },
-  speedText: {
+  speedLabel: {
     fontSize: 10,
-    fontWeight: '700',
-    marginTop: 1,
+    fontWeight: '800',
   },
 });
+
+export default AnimatedRiderMarker;

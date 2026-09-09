@@ -33,7 +33,8 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
   notifyGroupUpdates: true,
 };
 
-const STORAGE_KEY = '@biker_radar_user_preferences_v2';
+const STORAGE_KEY = '@nami_user_preferences_v2';
+const LEGACY_STORAGE_KEY = '@biker_radar_user_preferences_v2';
 
 type Listener = (prefs: UserPreferences) => void;
 const listeners: Set<Listener> = new Set();
@@ -41,7 +42,10 @@ const listeners: Set<Listener> = new Set();
 export const SettingsService = {
   async getPreferences(): Promise<UserPreferences> {
     try {
-      const json = await AsyncStorage.getItem(STORAGE_KEY);
+      let json = await AsyncStorage.getItem(STORAGE_KEY);
+      if (!json) {
+        json = await AsyncStorage.getItem(LEGACY_STORAGE_KEY);
+      }
       if (json) {
         return { ...DEFAULT_PREFERENCES, ...JSON.parse(json) };
       }

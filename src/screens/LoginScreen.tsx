@@ -169,7 +169,7 @@ export default function LoginScreen({ navigation }: Props) {
             <View style={[styles.logoCircle, { backgroundColor: isDark ? 'rgba(37, 99, 235, 0.15)' : 'rgba(37, 99, 235, 0.08)' }]}>
               <Ionicons name="navigate" size={40} color={colors.primary} />
             </View>
-            <Text style={[styles.title, { color: colors.text }]}>Biker Radar</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Nami</Text>
             <Text style={[styles.tagline, { color: colors.textMuted }]}>
               Ride together. Ride smarter.
             </Text>

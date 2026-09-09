@@ -12,7 +12,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
-import { BikerRadarLogo } from '../components/BikerRadarLogo';
+import { NamiLogo } from '../components/BikerRadarLogo';
 import SettingsService from '../services/SettingsService';
 import RideService from '../services/RideService';
 
@@ -198,20 +198,20 @@ export default function SplashScreen({ navigation }: Props) {
             ]}
           />
 
-          {/* Premium Biker Radar Logo */}
+          {/* Premium Nami Logo */}
           <Animated.View
             style={{
               opacity: logoOpacity,
               transform: [{ scale: logoScale }],
             }}
           >
-            <BikerRadarLogo size={140} showRings={true} />
+            <NamiLogo size={140} showRings={true} />
           </Animated.View>
         </View>
 
         {/* Title & Tagline */}
         <Animated.View style={[styles.textWrapper, { opacity: logoOpacity }]}>
-          <Text style={styles.titleText}>BIKER RADAR</Text>
+          <Text style={styles.titleText}>NAMI</Text>
           <Text style={styles.subtitleText}>Ride Smarter Together</Text>
         </Animated.View>
       </View>

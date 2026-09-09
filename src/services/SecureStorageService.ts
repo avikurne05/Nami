@@ -1,8 +1,10 @@
 import * as SecureStore from 'expo-secure-store';
 import { UserProfile } from '../types';
 
-const USER_PROFILE_KEY = 'biker_radar_secure_user_profile';
-const SESSION_TIMESTAMP_KEY = 'biker_radar_session_timestamp';
+const USER_PROFILE_KEY = 'nami_secure_user_profile';
+const LEGACY_USER_PROFILE_KEY = 'biker_radar_secure_user_profile';
+const SESSION_TIMESTAMP_KEY = 'nami_session_timestamp';
+const LEGACY_SESSION_TIMESTAMP_KEY = 'biker_radar_session_timestamp';
 
 export const SecureStorageService = {
   /**
@@ -23,7 +25,10 @@ export const SecureStorageService = {
    */
   async getUserProfile(): Promise<UserProfile | null> {
     try {
-      const json = await SecureStore.getItemAsync(USER_PROFILE_KEY);
+      let json = await SecureStore.getItemAsync(USER_PROFILE_KEY);
+      if (!json) {
+        json = await SecureStore.getItemAsync(LEGACY_USER_PROFILE_KEY);
+      }
       if (!json) return null;
       return JSON.parse(json) as UserProfile;
     } catch (error) {
@@ -37,8 +42,10 @@ export const SecureStorageService = {
    */
   async clearAuthData(): Promise<void> {
     try {
-      await SecureStore.deleteItemAsync(USER_PROFILE_KEY);
-      await SecureStore.deleteItemAsync(SESSION_TIMESTAMP_KEY);
+      await SecureStore.deleteItemAsync(USER_PROFILE_KEY).catch(() => {});
+      await SecureStore.deleteItemAsync(SESSION_TIMESTAMP_KEY).catch(() => {});
+      await SecureStore.deleteItemAsync(LEGACY_USER_PROFILE_KEY).catch(() => {});
+      await SecureStore.deleteItemAsync(LEGACY_SESSION_TIMESTAMP_KEY).catch(() => {});
     } catch (error) {
       console.warn('SecureStorageService: Failed to clear auth data:', error);
     }

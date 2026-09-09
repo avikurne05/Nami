@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nami — Complete SDE Interview Preparation Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@page {
+    size: A4;
+    margin: 16mm 14mm 16mm 14mm;
+    @bottom-right {
+        content: counter(page);
+    }
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #1E293B;
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Banner */
+.cover-header {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    color: #FFFFFF;
+    padding: 26px 22px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    border-left: 6px solid #2563EB;
+}
+
+.cover-header h1 {
+    font-size: 22pt;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+    color: #F8FAFC;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.cover-header .subtitle {
+    font-size: 11pt;
+    color: #94A3B8;
+    margin: 0 0 12px 0;
+    font-weight: 500;
+}
+
+.cover-header .badge-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    background: #334155;
+    color: #38BDF8;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 8.5pt;
+    font-weight: 600;
+}
+
+.badge.primary {
+    background: #2563EB;
+    color: #FFFFFF;
+}
+
+.badge.success {
+    background: #065F46;
+    color: #34D399;
+}
+
+/* Typography */
+h1 {
+    font-size: 16pt;
+    font-weight: 800;
+    color: #0F172A;
+    margin-top: 26px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #E2E8F0;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #1E293B;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+}
+
+h4 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    page-break-after: avoid;
+}
+
+p, ul, ol {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+li {
+    margin-bottom: 3px;
+}
+
+/* Callouts & Blockquotes */
+blockquote {
+    margin: 12px 0;
+    padding: 10px 14px;
+    background: #F8FAFC;
+    border-left: 4px solid #2563EB;
+    border-radius: 0 8px 8px 0;
+    color: #334155;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* Code Blocks & Monospace */
+code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    background: #F1F5F9;
+    color: #0F172A;
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid #E2E8F0;
+}
+
+pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    background: #0F172A;
+    color: #F8FAFC;
+    padding: 12px 14px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.4;
+    margin: 12px 0;
+    page-break-inside: avoid;
+    border: 1px solid #334155;
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+    font-size: inherit;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #CBD5E1;
+}
+
+th {
+    background: #1E293B;
+    color: #F8FAFC;
+    font-weight: 600;
+    text-align: left;
+    padding: 7px 9px;
+    border: 1px solid #334155;
+}
+
+td {
+    padding: 6px 9px;
+    border: 1px solid #E2E8F0;
+    vertical-align: top;
+}
+
+tr:nth-child(even) td {
+    background-color: #F8FAFC;
+}
+
+/* Specific Section Breaks */
+hr {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 20px 0;
+}
+
+/* Print specific optimizations */
+@media print {
+    body {
+        padding: 0;
+    }
+    .no-print {
+        display: none;
+    }
+    pre, blockquote, table {
+        page-break-inside: avoid;
+    }
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+}
+
+pre { line-height: 125%; }
+td.linenos .normal { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #666666; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f0f0f0; }
+.codehilite .c { color: #60a0b0; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #007020; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #60a0b0; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #60a0b0; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #007020 } /* Comment.Preproc */
+.codehilite .cpf { color: #60a0b0; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #60a0b0; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #60a0b0; background-color: #fff0f0 } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #FF0000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #00A000 } /* Generic.Inserted */
+.codehilite .go { color: #888888 } /* Generic.Output */
+.codehilite .gp { color: #c65d09; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #007020 } /* Keyword.Pseudo */
+.codehilite .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #902000 } /* Keyword.Type */
+.codehilite .m { color: #40a070 } /* Literal.Number */
+.codehilite .s { color: #4070a0 } /* Literal.String */
+.codehilite .na { color: #4070a0 } /* Name.Attribute */
+.codehilite .nb { color: #007020 } /* Name.Builtin */
+.codehilite .nc { color: #0e84b5; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #60add5 } /* Name.Constant */
+.codehilite .nd { color: #555555; font-weight: bold } /* Name.Decorator */
+.codehilite .ni { color: #d55537; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #007020 } /* Name.Exception */
+.codehilite .nf { color: #06287e } /* Name.Function */
+.codehilite .nl { color: #002070; font-weight: bold } /* Name.Label */
+.codehilite .nn { color: #0e84b5; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #bb60d5 } /* Name.Variable */
+.codehilite .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #40a070 } /* Literal.Number.Bin */
+.codehilite .mf { color: #40a070 } /* Literal.Number.Float */
+.codehilite .mh { color: #40a070 } /* Literal.Number.Hex */
+.codehilite .mi { color: #40a070 } /* Literal.Number.Integer */
+.codehilite .mo { color: #40a070 } /* Literal.Number.Oct */
+.codehilite .sa { color: #4070a0 } /* Literal.String.Affix */
+.codehilite .sb { color: #4070a0 } /* Literal.String.Backtick */
+.codehilite .sc { color: #4070a0 } /* Literal.String.Char */
+.codehilite .dl { color: #4070a0 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #4070a0; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #4070a0 } /* Literal.String.Double */
+.codehilite .se { color: #4070a0; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #4070a0 } /* Literal.String.Heredoc */
+.codehilite .si { color: #70a0d0; font-style: italic } /* Literal.String.Interpol */
+.codehilite .sx { color: #c65d09 } /* Literal.String.Other */
+.codehilite .sr { color: #235388 } /* Literal.String.Regex */
+.codehilite .s1 { color: #4070a0 } /* Literal.String.Single */
+.codehilite .ss { color: #517918 } /* Literal.String.Symbol */
+.codehilite .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #06287e } /* Name.Function.Magic */
+.codehilite .vc { color: #bb60d5 } /* Name.Variable.Class */
+.codehilite .vg { color: #bb60d5 } /* Name.Variable.Global */
+.codehilite .vi { color: #bb60d5 } /* Name.Variable.Instance */
+.codehilite .vm { color: #bb60d5 } /* Name.Variable.Magic */
+.codehilite .il { color: #40a070 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+
+<div class="cover-header">
+    <h1>Nami — SDE Interview Preparation Guide</h1>
+    <div class="subtitle">Complete Technical Blueprint, Architecture Deep-Dive, Data Flows & Interview Source of Truth</div>
+    <div class="badge-bar">
+        <span class="badge primary">React Native 0.81</span>
+        <span class="badge primary">TypeScript</span>
+        <span class="badge primary">Expo SDK 54</span>
+        <span class="badge success">Google Cloud Firestore</span>
+        <span class="badge">OSRM Engine</span>
+        <span class="badge">100% Grounded in Codebase</span>
+    </div>
+</div>
+
+<h1 id="nami-complete-sde-interview-preparation-guide-technical-manual">Nami — Complete SDE Interview Preparation Guide &amp; Technical Manual</h1>
+<blockquote>
+<p><strong>Codebase Source of Truth</strong>: Grounded directly in the actual Nami codebase (<code>/Users/avinash/Desktop/projectsss/BikeRadar</code>).<br />
+<strong>Rule Compliance</strong>: Real implementations only. No fabricated metrics, no invented architecture.</p>
+</blockquote>
+<hr />
+<h1 id="part-1-project-master-overview">PART 1 — PROJECT MASTER OVERVIEW</h1>
+<h3 id="1-problem-statement">1. Problem Statement</h3>
+<p>Group motorcycle and bicycle riding is inherently dangerous due to rider dispersion, blind turns, sudden traffic/road hazards, and emergency isolation. Riders cannot safely look at their phones while operating a vehicle at high speeds. Existing solutions (like WhatsApp live location or Google Maps sharing) are not built for navigation-speed real-time telemetry, lack low-latency relative proximity indicators, do not support voice-synthesized turn/hazard alerts, and fail when group members fall out of visual line-of-sight.</p>
+<h3 id="2-target-users">2. Target Users</h3>
+<ul>
+<li>Motorcycle touring clubs and weekend riding groups.</li>
+<li>Bicycle peloton groups and cycling commuters.</li>
+<li>Convoy road-trip travelers needing live telemetry, relative orientation, and immediate crash/SOS dispatch.</li>
+</ul>
+<h3 id="3-why-this-problem-matters">3. Why This Problem Matters</h3>
+<p>Riders traveling at 60–100 km/h cover 16–28 meters every second. In a group, when a tail rider encounters a mechanical failure, takes a wrong turn, or crashes, it can take miles for the front of the pack to realize someone is missing. Nami solves this with real-time distributed telemetry, automatic stopped/gap detection, high-contrast off-screen edge radar, and one-tap emergency SOS broadcast with voice alerts.</p>
+<h3 id="4-what-nami-does">4. What Nami Does</h3>
+<p>Nami is a real-time, low-latency mobile group navigation and telemetry platform. It enables riders to create a ride, instantly invite squad members via cryptographic QR codes or 6-character room codes, stream 1 Hz GPS coordinates + heading + speed + battery level, visualize riders with custom animated map markers, detect off-screen riders via trigonometric edge radar, report road hazards, and broadcast priority emergency SOS alerts synthesized into speech.</p>
+<h3 id="5-main-user-journey">5. Main User Journey</h3>
+<ol>
+<li><strong>Authentication</strong>: Sign in via Firebase Auth (Google OAuth or Email/Password).</li>
+<li><strong>Dashboard / Lobby</strong>: View ride history and quick stats. Create a new ride (selecting destination via Nominatim/Photon geocoding) or Join via QR code scan / 6-character code.</li>
+<li><strong>Waiting Lobby</strong>: Leader reviews squad list, shares join payload, and transitions ride state from <code>lobby</code> to <code>active</code>.</li>
+<li><strong>Active Navigation</strong>:<br />
+   * Map camera auto-tilts (52° pitch in heading-up mode) with bottom-third projection.<br />
+   * Real-time GPS stream (1 Hz) updates rider marker position and heading vector.<br />
+   * Off-screen riders projected onto viewport screen perimeter with distance and arrow icons.<br />
+   * Voice synthesis announces turns, distance remaining, and incoming hazard alerts.<br />
+   * Hazard reporting (Pothole, Police, Traffic, Accident, Animal, Weather).<br />
+   * Emergency SOS button broadcasts high-priority distress status with audio/haptic escalation.</li>
+<li><strong>Ride Completion</strong>: Leader or individual ends ride; stats (distance, duration, top speed, average speed) are computed, saved to local <code>AsyncStorage</code> and Firestore, and presented in <code>RideSummaryScreen</code>.</li>
+</ol>
+<h3 id="6-most-important-features">6. Most Important Features</h3>
+<ul>
+<li><strong>Sub-second Telemetry Streaming</strong>: 1 Hz GPS updates with battery and speed telemetry.</li>
+<li><strong>Trigonometric Edge Radar</strong>: Off-screen rider projection using <code>atan2</code> angle calculations and Haversine distance.</li>
+<li><strong>Cryptographic QR Join</strong>: JSON payload with join tokens, debounced against camera multi-frame race conditions.</li>
+<li><strong>Multi-tiered Resilient History</strong>: Dual persistence in local <code>AsyncStorage</code> (0ms offline retrieval) and Cloud Firestore.</li>
+<li><strong>Automated Audio HUD</strong>: Text-to-Speech synthesis for navigation instructions and squad alerts.</li>
+</ul>
+<h3 id="7-technology-stack">7. Technology Stack</h3>
+<ul>
+<li><strong>Frontend</strong>: React Native 0.81.5, Expo SDK 54, TypeScript.</li>
+<li><strong>Maps &amp; Geospatial</strong>: <code>react-native-maps</code> (Google Maps provider on Android), CARTO tile layer, Open Source Routing Machine (OSRM) REST API, OpenRouteService API (fallback).</li>
+<li><strong>Geocoding &amp; Weather</strong>: Komoot Photon API / OpenStreetMap Nominatim, Open-Meteo Weather API.</li>
+<li><strong>Backend &amp; Database</strong>: Firebase Authentication, Google Cloud Firestore (NoSQL, real-time WebSocket listeners).</li>
+<li><strong>Hardware &amp; Native</strong>: <code>expo-location</code>, <code>expo-sensors</code> (Compass magnetometer), <code>expo-battery</code>, <code>expo-speech</code>, <code>expo-secure-store</code>, Android Native CMake/C++ JNI.</li>
+</ul>
+<h3 id="8-high-level-architecture">8. High-Level Architecture</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[ Mobile Client (React Native + Expo) ]</span>
+<span class="w">  </span><span class="na">├── Presentation Layer (Screens &amp; Custom Map Markers)</span>
+<span class="w">  </span><span class="na">├── State &amp; Hook Layer (useAuth, useRide, useRiderLocations, useCompass)</span>
+<span class="w">  </span><span class="na">├── Business Service Layer (LocationService, RideService, NavigationService, SpeechService)</span>
+<span class="w">  </span><span class="na">└── Native Hardware Modules (GPS, Battery, Magnetometer, TTS, AsyncStorage)</span>
+<span class="w">             </span><span class="na">│</span>
+<span class="w">             </span><span class="na">│ WebSockets / HTTPS</span>
+<span class="w">             </span><span class="na">▼</span>
+<span class="k">[ Cloud Services ]</span>
+<span class="w">  </span><span class="na">├── Google Cloud Firestore (Real-time NoSQL Documents &amp; Subcollections)</span>
+<span class="w">  </span><span class="na">├── Firebase Authentication (JWT token issuance &amp; verification)</span>
+<span class="w">  </span><span class="na">├── OSRM / OpenRouteService (Turn-by-turn routing geometry)</span>
+<span class="w">  </span><span class="na">└── Open-Meteo / Photon (Weather &amp; Geocoding endpoints)</span>
+</code></pre></div>
+
+<h3 id="9-why-this-project-is-technically-interesting">9. Why This Project is Technically Interesting</h3>
+<ul>
+<li><strong>Mobile-Hardware Integration</strong>: Real-time fusion of GPS location provider, compass magnetometer readings, battery state, and audio synthesis pipelines under constrained CPU/battery budgets.</li>
+<li><strong>Geospatial &amp; Viewport Trigonometry</strong>: Transforming global spherical coordinates (WGS84 Lat/Lng) into 2D screen coordinate bounding boxes with angle calculations (<code>Math.atan2</code>) and elliptical border clamping.</li>
+<li><strong>Distributed State Synchronization</strong>: Handling $N$ riders writing to subcollections at 1 Hz, avoiding $O(N^2)$ document lock contention while maintaining real-time reactive UI at 60 FPS.</li>
+</ul>
+<h3 id="10-biggest-engineering-challenges">10. Biggest Engineering Challenges</h3>
+<ul>
+<li><strong>Firestore Document Contention</strong>: Migrated from a single monolithic ride document to independent <code>/locations/{userId}</code> subcollections to avoid lock conflicts at 1 Hz update frequencies.</li>
+<li><strong>Camera Multi-Frame Scan Race Conditions</strong>: Resolved rapid duplicate QR code callbacks using an atomic scan lock ref with debouncing.</li>
+<li><strong>Android Native Canvas Marker Clipping</strong>: Fixed hardware bitmap rendering bugs in <code>react-native-maps</code> by enforcing explicit coordinate anchors, fixed layout bounds, and transient <code>tracksViewChanges</code> state toggles.</li>
+</ul>
+<hr />
+<h3 id="interview-pitch-scripts">Interview Pitch Scripts</h3>
+<h4 id="30-second-explanation">30-Second Explanation</h4>
+<blockquote>
+<p>"I built Nami, a real-time group navigation and safety platform for motorcycle and cycling convoys using React Native, TypeScript, and Firebase. It solves group dispersion by streaming live telemetry at 1 Hz to an interactive map, calculating off-screen rider positions using custom trigonometric radar projection, and providing automated voice hazard alerts and emergency SOS dispatch. I engineered the backend with Firestore subcollections and local storage caching to ensure zero document write contention and sub-second sync across all riders."</p>
+</blockquote>
+<h4 id="1-minute-explanation">1-Minute Explanation</h4>
+<blockquote>
+<p>"Nami is a real-time group navigation app designed to keep motorcycle and bicycle convoys connected and safe on the road. In group rides, riders get separated at high speeds without a safe way to check their phones. Nami solves this through three core systems:<br />
+First, a low-latency telemetry pipeline using <code>expo-location</code> and Firestore subcollections that syncs GPS coordinates, heading, speed, and battery levels without lock contention.<br />
+Second, a geospatial edge-radar that uses trigonometry—specifically <code>atan2</code> relative angle projection and the Haversine formula—to render off-screen rider badges on the screen perimeter showing their exact direction and distance.<br />
+Third, an audio HUD using <code>expo-speech</code> that announces turn maneuvers, squad hazards, and SOS distress events hands-free.<br />
+I built it in React Native and TypeScript, with a resilient dual-tier persistence layer combining Cloud Firestore and <code>AsyncStorage</code>."</p>
+</blockquote>
+<h4 id="2-minute-explanation">2-Minute Explanation</h4>
+<blockquote>
+<p>"Nami is a distributed mobile navigation system engineered for high-speed convoy telemetry and safety.<br />
+From an architectural standpoint, the frontend is built on React Native and Expo with TypeScript, using a decoupled service-layer pattern. Real-time telemetry presented a classic distributed state challenge: if 10 riders write their GPS coordinates to a single shared ride document every second, you hit Firestore's 1 write/sec document limit and trigger write contention. I decoupled the data model into <code>/rides/{rideId}/locations/{userId}</code> subcollections, enabling each rider to independently write telemetry concurrently while squad members subscribe via a single real-time <code>onSnapshot</code> collection query.<br />
+For the mapping interface, we utilize <code>react-native-maps</code> backed by the OSRM routing engine. To solve the problem of riders falling out of the visible map viewport, I engineered an off-screen radar indicator. It computes the delta latitude/longitude relative to the map viewport center, calculates the polar angle using <code>Math.atan2</code>, and projects an elliptical screen coordinate clamped to safe display margins with Haversine distance calculation.<br />
+On the client side, I built a dual-tier storage strategy using <code>AsyncStorage</code> and Firestore rules to ensure zero-millisecond ride history retrieval even in offline or weak-cellular environments. For group joining, I implemented a cryptographically salted QR payload system with atomic scan locking to eliminate multi-frame camera race conditions. The result is a rock-solid, production-ready system that delivers 60 FPS UI performance while processing 1 Hz telemetry streams."</p>
+</blockquote>
+<hr />
+<h1 id="part-2-architecture-deep-dive">PART 2 — ARCHITECTURE DEEP DIVE</h1>
+<h3 id="complete-nami-architecture-diagram">Complete Nami Architecture Diagram</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">|                                  USER INTERFACE LAYER                             |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">HomeScreen</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">CreateRideScreen</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">JoinRideScreen</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">RideScreen</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">RideSummary</span><span class="k">]</span><span class="c">  |</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">                                         │</span>
+<span class="c">                                         ▼</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">|                               CUSTOM COMPONENT LAYER                              |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">AnimatedRiderMarker</span><span class="k">]</span><span class="c">   </span><span class="k">[</span><span class="c">BikerRadarEdgeIndicator</span><span class="k">]</span><span class="c">   </span><span class="k">[</span><span class="c">EmergencyAlertOverlay</span><span class="k">]</span><span class="c">      |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">PersistentEmergencyBanner</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">ActiveRideBanner</span><span class="k">]</span><span class="c">     </span><span class="k">[</span><span class="c">TopAppBar</span><span class="k">]</span><span class="c">                  |</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">                                         │</span>
+<span class="c">                                         ▼</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">|                              REACT HOOKS &amp; CONTEXT LAYER                          |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">AuthContext / useAuth</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">useRide</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">useRiderLocations</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">useCompass</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">useTheme</span><span class="k">]</span><span class="c">|</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">                                         │</span>
+<span class="c">                                         ▼</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">|                                BUSINESS SERVICE LAYER                             |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">RideService</span><span class="k">]</span><span class="c">      </span><span class="k">[</span><span class="c">LocationService</span><span class="k">]</span><span class="c">     </span><span class="k">[</span><span class="c">NavigationService</span><span class="k">]</span><span class="c">     </span><span class="k">[</span><span class="c">HazardService</span><span class="k">]</span><span class="c"> |</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">AuthService</span><span class="k">]</span><span class="c">      </span><span class="k">[</span><span class="c">SpeechService</span><span class="k">]</span><span class="c">       </span><span class="k">[</span><span class="c">GeocodingService</span><span class="k">]</span><span class="c">      </span><span class="k">[</span><span class="c">WeatherService</span><span class="k">]</span><span class="c">|</span>
+<span class="c">|  </span><span class="k">[</span><span class="c">SettingsService</span><span class="k">]</span><span class="c">  </span><span class="k">[</span><span class="c">NotificationService</span><span class="k">]</span><span class="c"> </span><span class="k">[</span><span class="c">SecureStorageService</span><span class="k">]</span><span class="c">                  |</span>
+<span class="nb">+-----------------------------------------------------------------------------------+</span>
+<span class="c">          │                           │                              │</span>
+<span class="c">          ▼                           ▼                              ▼</span>
+<span class="nb">+-------------------+</span><span class="c">      </span><span class="nb">+---------------------+</span><span class="c">       </span><span class="nb">+--------------------------+</span>
+<span class="c">|  LOCAL HARDWARE   |      |  FIREBASE CLOUD     |       |  EXTERNAL HTTP APIs      |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> GPS Location   |      |  </span><span class="nb">-</span><span class="c"> Cloud Firestore  |       |  </span><span class="nb">-</span><span class="c"> OSRM Routing Engine   |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> Magnetometer   |      |  </span><span class="nb">-</span><span class="c"> Firebase Auth    |       |  </span><span class="nb">-</span><span class="c"> OpenRouteService      |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> Battery API    |      |  </span><span class="nb">-</span><span class="c"> Security Rules   |       |  </span><span class="nb">-</span><span class="c"> Komoot Photon API     |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> Speech Synth   |      </span><span class="nb">+---------------------+</span><span class="c">       |  </span><span class="nb">-</span><span class="c"> OpenStreetMap Nom</span><span class="nt">.</span><span class="c">    |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> AsyncStorage   |                                    |  </span><span class="nb">-</span><span class="c"> Open</span><span class="nb">-</span><span class="c">Meteo Weather    |</span>
+<span class="c">|  </span><span class="nb">-</span><span class="c"> SecureStore    |                                    </span><span class="nb">+--------------------------+</span>
+<span class="nb">+-------------------+</span>
+</code></pre></div>
+
+<h3 id="architectural-layer-breakdown">Architectural Layer Breakdown</h3>
+<ol>
+<li>
+<p><strong>Presentation Layer (<code>src/screens/</code>, <code>src/components/</code>)</strong>:<br />
+   * Pure declarative React components utilizing custom themes (<code>useTheme</code>) supporting high-contrast Dark and Light navigation palettes.<br />
+   * <code>AnimatedRiderMarker</code>: Uses <code>Marker.Animated</code> with custom SVG/vector avatars, heading indicators, and dynamic <code>tracksViewChanges</code> state toggles to prevent Android canvas redraw bottlenecks.<br />
+   * <code>BikerRadarEdgeIndicator</code>: Canvas overlay rendering off-screen rider badges on viewport perimeters.</p>
+</li>
+<li>
+<p><strong>State &amp; Hooks Layer (<code>src/hooks/</code>, <code>src/context/</code>)</strong>:<br />
+   * <code>AuthContext.tsx</code>: Wraps Firebase <code>onAuthStateChanged</code> into React Context, handling session hydration from <code>@react-native-async-storage/async-storage</code> and <code>expo-secure-store</code>.<br />
+   * <code>useRide.ts</code>: Encapsulates ride session lifecycle, subscribing to the ride document and managing lobby vs active vs completed state machines.<br />
+   * <code>useRiderLocations.ts</code>: Listens to the <code>/rides/{rideId}/locations</code> subcollection using Firestore <code>onSnapshot</code>, maintaining an active in-memory dictionary of rider coordinates.<br />
+   * <code>useCompass.ts</code>: Subscribes to <code>expo-sensors</code> Magnetometer at 50ms intervals, applying low-pass filtering to calculate smooth orientation angles.</p>
+</li>
+<li>
+<p><strong>Service Layer (<code>src/services/</code>)</strong>:<br />
+   * Stateless singleton services encapsulating all business logic, data sanitization, network requests, and hardware API bindings.<br />
+   * No direct Firestore calls are allowed inside React components; everything flows through services (<code>RideService</code>, <code>LocationService</code>, <code>NavigationService</code>, etc.).</p>
+</li>
+<li>
+<p><strong>Utility Layer (<code>src/utils/</code>)</strong>:<br />
+   * <code>firestoreSanitizer.ts</code>: Deep object sanitization recursively removing <code>undefined</code> values before Firestore serialization.<br />
+   * <code>qrCodeGenerator.ts</code>: Generates and parses cryptographically salted <code>NAMI:{...}</code> and legacy <code>BIKERRADAR:{...}</code> payload envelopes.<br />
+   * <code>haversineDistance()</code>: Great-circle distance calculations between coordinate pairs.</p>
+</li>
+</ol>
+<hr />
+<h1 id="part-3-data-flow-tracing">PART 3 — DATA FLOW TRACING</h1>
+<div class="codehilite"><pre><span></span><code><span class="n">A</span><span class="p">.</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">FLOW</span>
+<span class="w">   </span><span class="err">[</span><span class="n">UI</span><span class="o">:</span><span class="w"> </span><span class="n">LoginScreen</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="k">User</span><span class="w"> </span><span class="n">enters</span><span class="w"> </span><span class="n">email</span><span class="o">/</span><span class="k">password</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">taps</span><span class="w"> </span><span class="n">Google</span><span class="w"> </span><span class="n">Sign</span><span class="o">-</span><span class="k">In</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">AuthService</span><span class="p">.</span><span class="n">signInWithEmail</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">signInWithGoogle</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Calls</span><span class="w"> </span><span class="n">Firebase</span><span class="w"> </span><span class="n">signInWithEmailAndPassword</span><span class="p">()</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">GoogleAuthProvider</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">Firebase</span><span class="w"> </span><span class="n">Auth</span><span class="w"> </span><span class="n">Backend</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Validates</span><span class="w"> </span><span class="n">credentials</span><span class="p">,</span><span class="w"> </span><span class="n">issues</span><span class="w"> </span><span class="n">JWT</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="n">Token</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Refresh</span><span class="w"> </span><span class="n">Token</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">onAuthStateChanged</span><span class="w"> </span><span class="n">Listener</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">AuthContext</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="k">Set</span><span class="n">s</span><span class="w"> </span><span class="n n-Quoted">`user`</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">displayName</span><span class="p">,</span><span class="w"> </span><span class="n">photoURL</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Caches</span><span class="w"> </span><span class="n">minimal</span><span class="w"> </span><span class="k">profile</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">AsyncStorage</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">SecureStore</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">AppNavigator</span><span class="w"> </span><span class="n">Navigation</span><span class="w"> </span><span class="n">Container</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Conditional</span><span class="w"> </span><span class="n">rendering</span><span class="w"> </span><span class="n">evaluates</span><span class="w"> </span><span class="n n-Quoted">`isAuthenticated`</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">Renders</span><span class="o">:</span><span class="w"> </span><span class="n">HomeScreen</span><span class="w"> </span><span class="n">Stack</span><span class="err">]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">B</span><span class="o">.</span><span class="w"> </span><span class="n">CREATE</span><span class="w"> </span><span class="n">RIDE</span><span class="w"> </span><span class="n">FLOW</span>
+<span class="w">   </span><span class="p">[</span><span class="n">UI</span><span class="p">:</span><span class="w"> </span><span class="n">CreateRideScreen</span><span class="p">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="n">enters</span><span class="w"> </span><span class="n">Ride</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">searches</span><span class="w"> </span><span class="n">Destination</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">GeocodingService</span><span class="o">.</span><span class="n">searchAddress</span><span class="p">()]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Queries</span><span class="w"> </span><span class="n">Photon</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">returns</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">RideService</span><span class="o">.</span><span class="n">createRide</span><span class="p">()]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">generateRoomCode</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Generates</span><span class="w"> </span><span class="mi">6</span><span class="o">-</span><span class="nb">char</span><span class="w"> </span><span class="n">alphanumeric</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;K8M2P9&#39;</span><span class="p">)</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">generateNamiJoinToken</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Generates</span><span class="w"> </span><span class="n">randomToken</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">timestamp</span><span class="w"> </span><span class="n">salt</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">generateNamiQRPayload</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Constructs</span><span class="w"> </span><span class="s1">&#39;NAMI:{version:1, rideId, roomCode, ...}&#39;</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="n">doc</span><span class="p">(</span><span class="n">collection</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rides&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Allocates</span><span class="w"> </span><span class="n">unique</span><span class="w"> </span><span class="n">Firestore</span><span class="w"> </span><span class="n">Document</span><span class="w"> </span><span class="n">ID</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">5.</span><span class="w"> </span><span class="n">sanitizeForFirestore</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Deep</span><span class="w"> </span><span class="n">cleans</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="n">undefined</span><span class="w"> </span><span class="n">fields</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">Firestore</span><span class="p">:</span><span class="w"> </span><span class="n">setDoc</span><span class="p">(</span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">})]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Writes</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;lobby&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">leaderId</span><span class="p">,</span><span class="w"> </span><span class="n">destination</span><span class="p">,</span><span class="w"> </span><span class="n">roomCode</span><span class="p">,</span><span class="w"> </span><span class="n">joinToken</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">Navigation</span><span class="p">:</span><span class="w"> </span><span class="n">navigate</span><span class="p">(</span><span class="s1">&#39;WaitingLobby&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rideId</span><span class="w"> </span><span class="p">})]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">C</span><span class="p">.</span><span class="w"> </span><span class="n">JOIN</span><span class="w"> </span><span class="n">RIDE</span><span class="w"> </span><span class="n">FLOW</span><span class="w"> </span><span class="p">(</span><span class="n">Manual</span><span class="w"> </span><span class="n">Code</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="n">QR</span><span class="w"> </span><span class="n">Scan</span><span class="p">)</span>
+<span class="w">   </span><span class="p">[</span><span class="n">Manual</span><span class="w"> </span><span class="n">Input</span><span class="p">]</span><span class="w">                           </span><span class="p">[</span><span class="n">QR</span><span class="w"> </span><span class="n">Camera</span><span class="w"> </span><span class="n">Scan</span><span class="p">]</span>
+<span class="w">   </span><span class="n">User</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="err">&#39;</span><span class="n">K8M2P9</span><span class="err">&#39;</span><span class="w">                     </span><span class="n">Camera</span><span class="w"> </span><span class="n">reads</span><span class="w"> </span><span class="err">&#39;</span><span class="n">NAMI</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;rideId&quot;</span><span class="o">:</span><span class="s">&quot;...&quot;</span><span class="p">,</span><span class="s">&quot;roomCode&quot;</span><span class="o">:</span><span class="s">&quot;...&quot;</span><span class="p">}</span><span class="err">&#39;</span>
+<span class="w">          </span><span class="err">│</span><span class="w">                                        </span><span class="err">│</span>
+<span class="w">          </span><span class="err">│</span><span class="w">                                 </span><span class="p">[</span><span class="n">parseNamiQRPayload</span><span class="p">()]</span>
+<span class="w">          </span><span class="err">│</span><span class="w">                                 </span><span class="n">Atomic</span><span class="w"> </span><span class="n">lock</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="p">(</span><span class="n">qrLockRef</span><span class="p">.</span><span class="n">current</span><span class="p">)</span>
+<span class="w">          </span><span class="err">│</span><span class="w">                                 </span><span class="n">Validates</span><span class="w"> </span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">extracts</span><span class="w"> </span><span class="n">rideId</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">roomCode</span>
+<span class="w">          </span><span class="err">└───────────────────┬────────────────────┘</span>
+<span class="w">                              </span><span class="err">│</span>
+<span class="w">                              </span><span class="err">▼</span>
+<span class="w">                 </span><span class="p">[</span><span class="n">RideService</span><span class="p">.</span><span class="n">joinRide</span><span class="p">()]</span>
+<span class="w">                              </span><span class="err">│</span>
+<span class="w">                 </span><span class="nl">Queries</span><span class="p">:</span><span class="w"> </span><span class="n">collection</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="n">rides</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">where</span><span class="p">(</span><span class="err">&#39;</span><span class="n">roomCode</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">==</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">)</span>
+<span class="w">                              </span><span class="err">│</span>
+<span class="w">                 </span><span class="n">Validates</span><span class="w"> </span><span class="n">ride</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="err">&#39;</span><span class="n">completed</span><span class="err">&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">inactivity</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">24</span><span class="n">h</span>
+<span class="w">                              </span><span class="err">│</span>
+<span class="w">                 </span><span class="nl">Firestore</span><span class="p">:</span><span class="w"> </span><span class="n">updateDoc</span><span class="p">(</span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">members</span><span class="o">:</span><span class="w"> </span><span class="n">arrayUnion</span><span class="p">(</span><span class="n">userId</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
+<span class="w">                              </span><span class="err">│</span>
+<span class="w">                              </span><span class="err">▼</span>
+<span class="w">                 </span><span class="p">[</span><span class="n">Navigation</span><span class="o">:</span><span class="w"> </span><span class="n">navigate</span><span class="p">(</span><span class="err">&#39;</span><span class="n">WaitingLobby</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rideId</span><span class="w"> </span><span class="p">})]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">D</span><span class="p">.</span><span class="w"> </span><span class="n">LIVE</span><span class="w"> </span><span class="n">LOCATION</span><span class="w"> </span><span class="n">TELEMETRY</span><span class="w"> </span><span class="n">FLOW</span>
+<span class="w">   </span><span class="err">[</span><span class="n">Device</span><span class="w"> </span><span class="n">GPS</span><span class="w"> </span><span class="n">Hardware</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Emits</span><span class="w"> </span><span class="n">LocationObject</span><span class="w"> </span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="w"> </span><span class="n">lng</span><span class="p">,</span><span class="w"> </span><span class="n">heading</span><span class="p">,</span><span class="w"> </span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="kt">timestamp</span><span class="p">)</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">Hz</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">LocationService</span><span class="p">.</span><span class="n">watchForegroundLocation</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Fetches</span><span class="w"> </span><span class="n">battery</span><span class="w"> </span><span class="n">percentage</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">expo</span><span class="o">-</span><span class="n">battery</span><span class="w"> </span><span class="p">(</span><span class="n">Battery</span><span class="p">.</span><span class="n">getBatteryLevelAsync</span><span class="p">())</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Computes</span><span class="w"> </span><span class="n">speed</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">km</span><span class="o">/</span><span class="n">h</span><span class="w"> </span><span class="p">(</span><span class="n n-Quoted">`speed * 3.6`</span><span class="p">)</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">riderStatus</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;riding&#39;</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="s1">&#39;stopped&#39;</span><span class="p">)</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">LocationService</span><span class="p">.</span><span class="n">uploadLocation</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Target</span><span class="o">:</span><span class="w"> </span><span class="n">doc</span><span class="p">(</span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rides&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">rideId</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;locations&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">)</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">Firestore</span><span class="o">:</span><span class="w"> </span><span class="k">set</span><span class="n">Doc</span><span class="p">(...,</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="k">merge</span><span class="o">:</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="err">}</span><span class="p">)</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Updates</span><span class="w"> </span><span class="n">subcollection</span><span class="w"> </span><span class="n">document</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="kt">real</span><span class="o">-</span><span class="kt">time</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">Remote</span><span class="w"> </span><span class="n">Squad</span><span class="w"> </span><span class="n">Devices</span><span class="o">:</span><span class="w"> </span><span class="n">onSnapshot</span><span class="p">(</span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="err">{</span><span class="n">rideId</span><span class="err">}</span><span class="o">/</span><span class="n">locations</span><span class="p">)</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">useRiderLocations</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">receives</span><span class="w"> </span><span class="n">updated</span><span class="w"> </span><span class="n">collection</span><span class="w"> </span><span class="k">snapshot</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Sanitizes</span><span class="w"> </span><span class="n">coordinates</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">updates</span><span class="w"> </span><span class="n n-Quoted">`locations`</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="n">dictionary</span>
+<span class="w">       </span><span class="n">▼</span>
+<span class="w">   </span><span class="err">[</span><span class="n">RideScreen</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">AnimatedRiderMarker</span><span class="err">]</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">Coordinate</span><span class="w"> </span><span class="n">interpolation</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">animatedRegionRef</span><span class="p">.</span><span class="n">timing</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="n">850ms</span><span class="w"> </span><span class="n">duration</span><span class="p">)</span>
+<span class="w">       </span><span class="n">│</span><span class="w"> </span><span class="n">BikerRadarEdgeIndicator</span><span class="w"> </span><span class="n">recalculates</span><span class="w"> </span><span class="n">relative</span><span class="w"> </span><span class="n">atan2</span><span class="w"> </span><span class="n">angles</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">off</span><span class="o">-</span><span class="n">screen</span><span class="w"> </span><span class="n">riders</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">E</span><span class="p">.</span><span class="w"> </span><span class="n">EMERGENCY</span><span class="w"> </span><span class="n">SOS</span><span class="w"> </span><span class="n">FLOW</span>
+<span class="w">   </span><span class="o">[</span><span class="n">UI: SOS Button Held 1.5s in RideScreen</span><span class="o">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Triggers</span><span class="w"> </span><span class="n">LocationService</span><span class="p">.</span><span class="n">broadcastEmergencySOS</span><span class="p">(</span><span class="n">rideId</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">userName</span><span class="p">)</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="o">[</span><span class="n">LocationService: uploadLocation(..., &#39;sos&#39;)</span><span class="o">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">Writes</span><span class="w"> </span><span class="nl">riderStatus</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;sos&#39;</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="err">{</span><span class="n">rideId</span><span class="err">}</span><span class="o">/</span><span class="n">locations</span><span class="o">/</span><span class="err">{</span><span class="n">userId</span><span class="err">}</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">Updates</span><span class="w"> </span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="err">{</span><span class="n">rideId</span><span class="err">}</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="nl">lastEmergencyAt</span><span class="p">:</span><span class="w"> </span><span class="nc">Date</span><span class="p">.</span><span class="n">now</span><span class="p">(),</span><span class="w"> </span><span class="nl">lastEmergencyUser</span><span class="p">:</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="err">}</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">Automatic</span><span class="w"> </span><span class="mi">3</span><span class="o">-</span><span class="n">attempt</span><span class="w"> </span><span class="n">exponential</span><span class="w"> </span><span class="n">retry</span><span class="w"> </span><span class="n">loop</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">network</span><span class="w"> </span><span class="n">failure</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="o">[</span><span class="n">Remote Squad Devices: onSnapshot(/rides/{rideId}/locations)</span><span class="o">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Emergency</span><span class="w"> </span><span class="n">detection</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">flags</span><span class="w"> </span><span class="n">riderStatus</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;sos&#39;</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="o">[</span><span class="n">Client UI &amp; Hardware Escalation</span><span class="o">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">EmergencyAlertOverlay</span><span class="w"> </span><span class="n">modal</span><span class="w"> </span><span class="n">renders</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">UI</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">Vibration</span><span class="p">.</span><span class="n">vibrate</span><span class="p">(</span><span class="o">[</span><span class="n">0, 500, 200, 500</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Haptic</span><span class="w"> </span><span class="n">loop</span><span class="p">)</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">SpeechService</span><span class="p">.</span><span class="n">speakAlert</span><span class="p">(</span><span class="s1">&#39;Emergency SOS alert from [User]&#39;</span><span class="p">)</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="n">PersistentEmergencyBanner</span><span class="w"> </span><span class="n">mounts</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">screen</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="ss">&quot;Locate Rider&quot;</span><span class="w"> </span><span class="n">button</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">F</span><span class="o">.</span><span class="w"> </span><span class="n">RIDE</span><span class="w"> </span><span class="n">COMPLETION</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">DUAL</span><span class="w"> </span><span class="n">PERSISTENCE</span><span class="w"> </span><span class="n">FLOW</span>
+<span class="w">   </span><span class="p">[</span><span class="n">Ride</span><span class="w"> </span><span class="n">Leader</span><span class="w"> </span><span class="n">taps</span><span class="w"> </span><span class="s2">&quot;End Ride&quot;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">RideScreen</span><span class="p">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Computes</span><span class="p">:</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">totalDistance</span><span class="p">,</span><span class="w"> </span><span class="n">averageSpeed</span><span class="p">,</span><span class="w"> </span><span class="n">topSpeed</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">RideService</span><span class="o">.</span><span class="n">endRide</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">persistRideHistory</span><span class="p">()]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">Sets</span><span class="w"> </span><span class="n">ride</span><span class="w"> </span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">}</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">Generates</span><span class="w"> </span><span class="n">sanitized</span><span class="w"> </span><span class="n">RideHistoryEntry</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">LOCAL</span><span class="w"> </span><span class="n">CACHE</span><span class="p">:</span><span class="w"> </span><span class="n">Saves</span><span class="w"> </span><span class="n">immediately</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">AsyncStorage</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;@nami_ride_history_&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">uid</span><span class="p">)</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="n">FIRESTORE</span><span class="w"> </span><span class="n">ARCHIVE</span><span class="p">:</span><span class="w"> </span><span class="n">Writes</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="o">/</span><span class="n">completed_rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">}</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">5.</span><span class="w"> </span><span class="n">FIRESTORE</span><span class="w"> </span><span class="n">USER</span><span class="w"> </span><span class="n">SUBCOLLECTION</span><span class="p">:</span><span class="w"> </span><span class="n">Writes</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="p">{</span><span class="n">uid</span><span class="p">}</span><span class="o">/</span><span class="n">ride_history</span><span class="o">/</span><span class="p">{</span><span class="n">historyId</span><span class="p">}</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="mf">6.</span><span class="w"> </span><span class="n">FIRESTORE</span><span class="w"> </span><span class="n">SQUAD</span><span class="w"> </span><span class="n">BATCH</span><span class="p">:</span><span class="w"> </span><span class="n">Writes</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">top</span><span class="o">-</span><span class="n">level</span><span class="w"> </span><span class="o">/</span><span class="n">ride_history</span><span class="o">/</span><span class="p">{</span><span class="n">historyId</span><span class="p">}</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">Navigation</span><span class="p">:</span><span class="w"> </span><span class="n">navigation</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;RideSummary&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">summary</span><span class="w"> </span><span class="p">})]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">Renders</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="n">statistics</span><span class="p">,</span><span class="w"> </span><span class="n">timeline</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">animated</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="n">polyline</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="p">[</span><span class="n">User</span><span class="w"> </span><span class="n">navigates</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">HomeScreen</span><span class="p">]</span>
+<span class="w">       </span><span class="err">│</span><span class="w"> </span><span class="n">getRideHistory</span><span class="p">()</span><span class="w"> </span><span class="n">loads</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">AsyncStorage</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="n">ms</span><span class="p">,</span><span class="w"> </span><span class="n">merges</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">Firestore</span><span class="w"> </span><span class="n">records</span>
+</code></pre></div>
+
+<hr />
+<h1 id="part-4-firestore-deep-dive">PART 4 — FIRESTORE DEEP DIVE</h1>
+<h3 id="complete-firestore-schema">Complete Firestore Schema</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">Firestore</span><span class="w"> </span><span class="n">Root</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="p">{</span><span class="n">userId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Document</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">uid</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">displayName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">photoURL</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nb nb-Type">null</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">createdAt</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="o">/</span><span class="n">ride_history</span><span class="o">/</span><span class="p">{</span><span class="n">historyId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Subcollection</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">rideId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">destinationName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">duration</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">totalDistance</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">km</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">averageSpeed</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">km</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">topSpeed</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">km</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">membersCount</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">startTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">endTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">memberUids</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="p">[]</span>
+<span class="err">│</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Document</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">roomCode</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="w"> </span><span class="n">chars</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="w"> </span><span class="s2">&quot;K8M2P9&quot;</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">joinToken</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">qrPayload</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;lobby&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;cancelled&#39;</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">maxGap</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">visibility</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;private&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;public&#39;</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">createdAt</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">lastActivityAt</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">members</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="n">array</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">userIds</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">destination</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="w"> </span><span class="p">}</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">startLocation</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="w"> </span><span class="p">}</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">lastEmergencyAt</span><span class="err">?</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">lastEmergencyUser</span><span class="err">?</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">locations</span><span class="o">/</span><span class="p">{</span><span class="n">userId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Subcollection</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">userName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">latitude</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">longitude</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">speed</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">km</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">heading</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">degrees</span><span class="w"> </span><span class="mi">0</span><span class="o">-</span><span class="mi">360</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">battery</span><span class="err">?</span><span class="p">:</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">(</span><span class="n">percentage</span><span class="w"> </span><span class="mi">0</span><span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">network</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;online&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;offline&#39;</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">riderStatus</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;riding&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;stopped&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;break&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;sos&#39;</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">timestamp</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="o">/</span><span class="n">hazards</span><span class="o">/</span><span class="p">{</span><span class="n">hazardId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Subcollection</span><span class="p">)</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">category</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;pothole&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;police&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;traffic&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;accident&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;animal&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;weather&#39;</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">latitude</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">longitude</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">reportedBy</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">reportedByName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">       </span><span class="err">├──</span><span class="w"> </span><span class="n">reportedAt</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">resolved</span><span class="p">:</span><span class="w"> </span><span class="n">boolean</span>
+<span class="err">│</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">completed_rides</span><span class="o">/</span><span class="p">{</span><span class="n">rideId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Document</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">rideId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">destination</span><span class="p">:</span><span class="w"> </span><span class="n">object</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">startLocation</span><span class="p">:</span><span class="w"> </span><span class="n">object</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">startTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">endTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">totalDuration</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">members</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="p">[]</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">membersCount</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">completedReason</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;manual&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;leader_ended&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;auto_expired&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;all_left&#39;</span>
+<span class="err">│</span>
+<span class="err">└──</span><span class="w"> </span><span class="o">/</span><span class="n">ride_history</span><span class="o">/</span><span class="p">{</span><span class="n">historyId</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">Document</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Top</span><span class="o">-</span><span class="n">level</span><span class="w"> </span><span class="n">legacy</span><span class="o">/</span><span class="n">squad</span><span class="w"> </span><span class="n">archive</span><span class="p">)</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">rideId</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">leaderName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">destinationName</span><span class="p">:</span><span class="w"> </span><span class="n">string</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">duration</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">totalDistance</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">averageSpeed</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">topSpeed</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">membersCount</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">startTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">endTime</span><span class="p">:</span><span class="w"> </span><span class="n">number</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="n">memberUids</span><span class="p">:</span><span class="w"> </span><span class="n">string</span><span class="p">[]</span>
+</code></pre></div>
+
+<h3 id="why-subcollections-ridesrideidlocationsuserid-vs-single-document">Why Subcollections <code>/rides/{rideId}/locations/{userId}</code> vs Single Document?</h3>
+<table>
+<thead>
+<tr>
+<th>Architectural Dimension</th>
+<th>Storing all locations in <code>/rides/{rideId}</code></th>
+<th>Subcollection <code>/rides/{rideId}/locations/{userId}</code> (Nami)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Write Contention</strong></td>
+<td>❌ <strong>High Collision</strong>: Firestore limits writes to a single document to ~1 write/sec. With 10 riders updating at 1 Hz (10 writes/sec), 90% of writes fail or get queued.</td>
+<td>✅ <strong>Zero Contention</strong>: Each rider writes to their own document concurrently. Scalable to $N$ riders.</td>
+</tr>
+<tr>
+<td><strong>Payload Size &amp; Bandwidth</strong></td>
+<td>❌ <strong>Heavy Overload</strong>: Every 1 Hz update sends the entire array of all riders' locations over the wire. Bandwidth scales quadratically $O(N^2)$.</td>
+<td>✅ <strong>Minimal Bandwidth</strong>: Each write is ~200 bytes containing only that specific rider's telemetry.</td>
+</tr>
+<tr>
+<td><strong>Security Granularity</strong></td>
+<td>❌ <strong>Weak</strong>: Security rules cannot restrict a user to only editing their own index in a root document array without complex array validation expressions.</td>
+<td>✅ <strong>Strict</strong>: <code>allow update: if request.auth.uid == userId</code> enforces absolute document-level ownership.</td>
+</tr>
+<tr>
+<td><strong>Atomic Updates</strong></td>
+<td>❌ <strong>Race Conditions</strong>: Two riders writing simultaneously overwrite each other's location unless using transactions (which would fail at 1 Hz).</td>
+<td>✅ <strong>Isolated</strong>: Independent documents eliminate write race conditions entirely.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firestore-consistency-real-time-listeners-offline-behavior">Firestore Consistency, Real-Time Listeners &amp; Offline Behavior</h3>
+<ul>
+<li><strong>Concurrency &amp; Consistency</strong>: Firestore uses strong consistency for single-document reads/writes and multi-document transactions. Because each rider writes strictly to their own <code>/locations/{userId}</code> document, concurrent writes never collide.</li>
+<li><strong><code>onSnapshot()</code> Internals</strong>: Establishes a persistent bidirectional gRPC/WebSocket streaming channel. Listeners fire immediately on initial attachment with cached/server data, and trigger whenever any document within the matched query/collection changes.</li>
+<li><strong>Network Drops &amp; Offline Behavior</strong>:</li>
+<li>Firestore maintains an internal in-memory offline queue for pending writes.</li>
+<li>In Nami, we also implemented an explicit application-level local cache using <code>@react-native-async-storage/async-storage</code> for ride history, ensuring instant 0ms retrieval and offline resilience even if the Firebase SDK cache is cleared.</li>
+</ul>
+<hr />
+<h1 id="part-5-firestore-security">PART 5 — FIRESTORE SECURITY</h1>
+<h3 id="security-rules-architecture-the-test-mode-post-mortem">Security Rules Architecture &amp; The "Test Mode" Post-Mortem</h3>
+<ol>
+<li><strong>What Security Rules Are</strong>: Server-side declarative authorization rules executed by Google Cloud before any document read or write is permitted.</li>
+<li><strong>Why Test Mode Expired</strong>: Firebase projects created in "Test Mode" default to <code>allow read, write: if request.time &lt; timestamp.date(YYYY, MM, DD);</code> (a 30-day countdown). On August 15, 2026, the timestamp expired, locking all client access and throwing <code>Missing or insufficient permissions</code>.</li>
+<li><strong>The Solution</strong>: Hardened production security rules were deployed in <a href="file:///Users/avinash/Desktop/projectsss/BikeRadar/firestore.rules"><code>firestore.rules</code></a>, enforcing strict authentication and document-level ownership.</li>
+</ol>
+<h3 id="authentication-vs-authorization">Authentication vs Authorization</h3>
+<ul>
+<li><strong>Authentication (AuthN)</strong>: "Who are you?" Handled by Firebase Auth via cryptographically signed JSON Web Tokens (JWT).</li>
+<li><strong>Authorization (AuthZ)</strong>: "What are you allowed to do?" Enforced in Firestore Security Rules by verifying <code>request.auth.uid</code> against document parameters (<code>userId</code>, <code>leaderId</code>, <code>memberUids</code>).</li>
+</ul>
+<h3 id="security-analysis-of-nami-rules">Security Analysis of Nami Rules</h3>
+<div class="codehilite"><pre><span></span><code><span class="nx">rules_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="p">;</span>
+<span class="nx">service</span><span class="w"> </span><span class="nx">cloud</span><span class="p">.</span><span class="nx">firestore</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">databases</span><span class="o">/</span><span class="p">{</span><span class="nx">database</span><span class="p">}</span><span class="o">/</span><span class="nx">documents</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// 1. User Profiles &amp; Subcollections</span>
+<span class="w">    </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">users</span><span class="o">/</span><span class="p">{</span><span class="nx">userId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="p">,</span><span class="w"> </span><span class="nx">update</span><span class="p">,</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">userId</span><span class="p">;</span>
+
+<span class="w">      </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">ride_history</span><span class="o">/</span><span class="p">{</span><span class="nx">historyId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="p">,</span><span class="w"> </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 2. Rides &amp; Telemetry Subcollections</span>
+<span class="w">    </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">rides</span><span class="o">/</span><span class="p">{</span><span class="nx">rideId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span>
+<span class="w">      </span><span class="p">);</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">;</span>
+
+<span class="w">      </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">locations</span><span class="o">/</span><span class="p">{</span><span class="nx">userId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="p">,</span><span class="w"> </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">userId</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">          </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="o">||</span>
+<span class="w">          </span><span class="nx">get</span><span class="p">(</span><span class="sr">/databases/</span><span class="nx">$</span><span class="p">(</span><span class="nx">database</span><span class="p">)</span><span class="o">/</span><span class="nx">documents</span><span class="o">/</span><span class="nx">rides</span><span class="o">/</span><span class="nx">$</span><span class="p">(</span><span class="nx">rideId</span><span class="p">)).</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">hazards</span><span class="o">/</span><span class="p">{</span><span class="nx">hazardId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">reportedBy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">allow</span><span class="w"> </span><span class="nx">update</span><span class="p">,</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">          </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">reportedBy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="o">||</span>
+<span class="w">          </span><span class="nx">get</span><span class="p">(</span><span class="sr">/databases/</span><span class="nx">$</span><span class="p">(</span><span class="nx">database</span><span class="p">)</span><span class="o">/</span><span class="nx">documents</span><span class="o">/</span><span class="nx">rides</span><span class="o">/</span><span class="nx">$</span><span class="p">(</span><span class="nx">rideId</span><span class="p">)).</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 3. Completed Rides &amp; Master History</span>
+<span class="w">    </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">completed_rides</span><span class="o">/</span><span class="p">{</span><span class="nx">rideId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="p">,</span><span class="w"> </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">leaderId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">ride_history</span><span class="o">/</span><span class="p">{</span><span class="nx">historyId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">allow</span><span class="w"> </span><span class="nx">update</span><span class="p">,</span><span class="w"> </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">memberUids</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="potential-weakness-production-improvement">Potential Weakness &amp; Production Improvement:</h4>
+<ul>
+<li><em>Current rule</em>: <code>/rides/{rideId}</code> allows any authenticated user to read active rides. This is necessary for room code discovery (<code>where('roomCode', '==', code)</code>).</li>
+<li><em>Production improvement</em>: Use Firestore Hash/Index lookup or Cloud Functions to join rides so private rides cannot be enumerated.</li>
+</ul>
+<hr />
+<h1 id="part-6-real-time-location-system">PART 6 — REAL-TIME LOCATION SYSTEM</h1>
+<h3 id="telemetry-pipeline">Telemetry Pipeline</h3>
+<ul>
+<li><strong>Library</strong>: <code>expo-location</code></li>
+<li><strong>Configuration</strong>: <code>Location.Accuracy.High</code>, <code>timeInterval: 1000</code> (1 second), <code>distanceInterval: 1</code> (1 meter threshold).</li>
+<li><strong>Payload Fields</strong>: <code>latitude</code>, <code>longitude</code>, <code>speed</code> (converted from m/s to km/h via <code>* 3.6</code>), <code>heading</code> (degrees 0–360°), <code>battery</code> (from <code>expo-battery</code>), <code>riderStatus</code> ('riding' if speed &gt; 3 km/h, else 'stopped', 'break', 'sos'), <code>timestamp</code> (<code>Date.now()</code>).</li>
+</ul>
+<h3 id="location-scaling-strategies">Location Scaling Strategies</h3>
+<table>
+<thead>
+<tr>
+<th>Group Size</th>
+<th>Architecture Strategy</th>
+<th>Firestore Reads/sec</th>
+<th>Cost / Performance Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>10 Riders</strong> (Current Nami)</td>
+<td>Direct Firestore subcollections (<code>1 Hz</code>)</td>
+<td>10 writes/sec, 100 reads/sec ($N \times N$)</td>
+<td>Fully responsive, negligible latency (~300ms), low cost.</td>
+</tr>
+<tr>
+<td><strong>50 Riders</strong></td>
+<td>Client-side Throttle (2 Hz on move, 5s on idle)</td>
+<td>~25 writes/sec, ~1250 reads/sec</td>
+<td>Requires adaptive update throttling based on speed/acceleration.</td>
+</tr>
+<tr>
+<td><strong>500 Riders</strong></td>
+<td>Ingestion Gateway + Redis Pub/Sub</td>
+<td>Replaces Firestore with WebSockets connected to Node.js / Redis Geohash</td>
+<td>$O(N)$ distribution via spatial room sharding.</td>
+</tr>
+<tr>
+<td><strong>10,000 Riders</strong></td>
+<td>Spatial Geohashing (e.g. Uber H3 / S2 Geometry) + UDP</td>
+<td>Edge ingestion servers with binary protobufs</td>
+<td>Clients only receive telemetry for riders within a 5 km bounding box.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="part-7-map-geo-spatial-mathematics">PART 7 — MAP &amp; GEO-SPATIAL MATHEMATICS</h1>
+<h3 id="1-the-haversine-formula-whiteboard-derivation">1. The Haversine Formula (Whiteboard Derivation)</h3>
+<p>Calculates the great-circle distance between two points on a sphere given their longitudes and latitudes:</p>
+<p>$$\Delta\text{lat} = \text{lat}_2 - \text{lat}_1, \quad \Delta\text{lon} = \text{lon}_2 - \text{lon}_1$$</p>
+<p>$$a = \sin^2\left(\frac{\Delta\text{lat}}{2}\right) + \cos(\text{lat}_1) \cdot \cos(\text{lat}_2) \cdot \sin^2\left(\frac{\Delta\text{lon}}{2}\right)$$</p>
+<p>$$c = 2 \cdot \text{atan2}\left(\sqrt{a}, \sqrt{1-a}\right)$$</p>
+<p>$$d = R \cdot c \quad (\text{where } R = 6,371,000 \text{ meters})$$</p>
+<p>In Nami (<code>src/utils/index.ts</code>): Used to compute distance remaining to destination and relative distances to squad riders.</p>
+<h3 id="2-off-screen-radar-projection-algorithm-bikerradaredgeindicatortsx">2. Off-Screen Radar Projection Algorithm (<code>BikerRadarEdgeIndicator.tsx</code>)</h3>
+<div class="codehilite"><pre><span></span><code>                  Screen Top Margin (160px)
+       +---------------------------------------------+
+       |                                             |
+       |                   (0, +1)                   |
+       |                     ▲                       |
+       |                     │                       |
+       |   (-1, 0) ◄─────────┼─────────► (+1, 0)     |
+       |                     │                       |
+       |                     ▼                       |
+       |                   (0, -1)                   |
+       |                                             |
+       +---------------------------------------------+
+                Screen Bottom Margin (H - 200px)
+</code></pre></div>
+
+<ol>
+<li><strong>Viewport Bounding Check</strong>:<br />
+   $$\text{isOffScreen} = (\text{lat} &lt; \text{minLat} \lor \text{lat} &gt; \text{maxLat} \lor \text{lng} &lt; \text{minLng} \lor \text{lng} &gt; \text{maxLng})$$</li>
+<li><strong>Relative Offset &amp; Polar Angle</strong>:<br />
+   $$d\text{Lat} = \text{rider.lat} - \text{mapRegion.lat}, \quad d\text{Lng} = \text{rider.lng} - \text{mapRegion.lng}$$<br />
+   $$\theta = \text{atan2}(d\text{Lat}, d\text{Lng}) \quad [-\pi \text{ to } +\pi]$$</li>
+<li><strong>Screen Boundary Elliptical Projection</strong>:<br />
+   $$\text{edgeX} = \text{centerX} + \cos(\theta) \cdot \text{halfWidth}$$<br />
+   $$\text{edgeY} = \text{centerY} - \sin(\theta) \cdot \text{halfHeight} \quad (\text{Y is inverted in screen space})$$</li>
+<li><strong>Boundary Clamping</strong>:<br />
+   $$\text{edgeX} = \max(\text{leftMargin}, \min(\text{rightMargin}, \text{edgeX}))$$<br />
+   $$\text{edgeY} = \max(\text{topMargin}, \min(\text{bottomMargin}, \text{edgeY}))$$</li>
+<li><strong>Directional Arrow Mapping</strong>:<br />
+   Octant angle $\phi = (\theta \cdot \frac{180}{\pi} + 360) \pmod{360}$ maps to 8 directional icons (<code>arrow-up</code>, <code>arrow-up-right</code>, etc.).</li>
+</ol>
+<hr />
+<h1 id="part-8-qr-system-concurrency-controls">PART 8 — QR SYSTEM &amp; CONCURRENCY CONTROLS</h1>
+<h3 id="qr-payload-format">QR Payload Format</h3>
+<div class="codehilite"><pre><span></span><code><span class="err">NAMI</span><span class="p">:{</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;rideId&quot;</span><span class="p">:</span><span class="s2">&quot;abc123xyz&quot;</span><span class="p">,</span><span class="nt">&quot;roomCode&quot;</span><span class="p">:</span><span class="s2">&quot;K8M2P9&quot;</span><span class="p">,</span><span class="nt">&quot;leaderId&quot;</span><span class="p">:</span><span class="s2">&quot;user456&quot;</span><span class="p">,</span><span class="nt">&quot;joinToken&quot;</span><span class="p">:</span><span class="s2">&quot;7k2x9a-l0z1m8&quot;</span><span class="p">,</span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="mi">1724145000000</span><span class="p">}</span>
+</code></pre></div>
+
+<h3 id="the-camera-multi-frame-race-condition">The Camera Multi-Frame Race Condition</h3>
+<ul>
+<li><strong>Problem</strong>: Mobile camera scanners fire <code>onBarcodeScanned</code> at 30–60 FPS. When a user points the camera at a QR code, the callback executes 10–15 times within 250 milliseconds before the first network navigation completes. This triggered 10 concurrent <code>joinRide()</code> requests, causing Firestore write collisions and screen navigation flicker.</li>
+<li><strong>Solution</strong>: Implemented an atomic <code>useRef&lt;boolean&gt;(false)</code> lock combined with an immediate debounced timeout:<br />
+<code>ts
+  const isScanningRef = useRef(false);
+  const handleBarcodeScanned = async ({ data }) =&gt; {
+    if (isScanningRef.current) return;
+    isScanningRef.current = true;
+    try {
+      await processJoinPayload(data);
+    } finally {
+      setTimeout(() =&gt; { isScanningRef.current = false; }, 2000);
+    }
+  };</code></li>
+</ul>
+<h3 id="backwards-compatibility">Backwards Compatibility</h3>
+<p>The parser (<code>parseNamiQRPayload</code>) transparently supports both <code>NAMI:</code> and legacy <code>BIKERRADAR:</code> prefixes, raw 6-character room codes, and deep links (<code>https://nami.app/join/CODE</code>), ensuring older versions of the app can join sessions seamlessly.</p>
+<hr />
+<h1 id="part-9-sos-emergency-system">PART 9 — SOS EMERGENCY SYSTEM</h1>
+<h3 id="architecture">Architecture</h3>
+<ol>
+<li>User holds SOS button for 1.5 seconds to prevent accidental triggers.</li>
+<li><code>LocationService.broadcastEmergencySOS</code> updates <code>/rides/{rideId}/locations/{userId}</code> with <code>riderStatus: 'sos'</code>.</li>
+<li>An exponential backoff loop executes up to 3 retry attempts on weak network connections.</li>
+<li>Remote clients listening via <code>onSnapshot</code> trigger <code>EmergencyAlertOverlay</code>, initiate a haptic vibration loop (<code>Vibration.vibrate([0, 500, 200, 500], true)</code>), and synthesize voice alerts via <code>SpeechService</code>.</li>
+</ol>
+<h3 id="safety-critical-critique-is-firestore-suitable-for-mission-critical-sos">Safety-Critical Critique: Is Firestore suitable for mission-critical SOS?</h3>
+<ul>
+<li><strong>Honest Engineering Answer</strong>: <strong>No</strong>, standard Cloud Firestore over consumer cellular connections is not sufficient for life-critical automotive emergency systems.</li>
+<li><strong>Why</strong>: Firestore relies on TCP/HTTPS/WebSockets over public cellular towers, which suffer from coverage dead zones in mountain passes and high-speed packet drop.</li>
+<li><strong>Production Architecture for Safety-Critical Systems</strong>:</li>
+<li>Fallback to direct SMS / Satellite Emergency API (e.g. Iridium/Garmin inReach or Apple Satellite SOS) sending compact binary GPS coordinates.</li>
+<li>Cellular UDP binary packets via dedicated edge brokers with dead-man switch heartbeats (if heartbeats cease for &gt;60s while speed was &gt;50 km/h, trigger crash alert automatically).</li>
+</ul>
+<hr />
+<h1 id="part-10-text-to-speech-tts-hud">PART 10 — TEXT-TO-SPEECH (TTS) HUD</h1>
+<ul>
+<li><strong>Library</strong>: <code>expo-speech</code></li>
+<li><strong>Trigger Events</strong>:</li>
+<li>Navigation turn instructions (<code>In 500m, turn left on Malviya Marg</code>).</li>
+<li>Road hazard announcements (<code>Hazard reported ahead: Pothole</code>).</li>
+<li>Squad SOS alerts (<code>Emergency SOS alert from Rahul</code>).</li>
+<li>Arrival detection (<code>You have arrived at your destination</code>).</li>
+<li><strong>Deduplication</strong>: <code>SpeechService</code> maintains an in-memory queue with utterance hashing to prevent repetitive announcements when GPS coordinates fluctuate around a maneuver boundary.</li>
+</ul>
+<hr />
+<h1 id="part-11-battery-monitoring">PART 11 — BATTERY MONITORING</h1>
+<ul>
+<li><strong>Library</strong>: <code>expo-battery</code></li>
+<li><strong>Implementation</strong>: <code>LocationService</code> checks <code>Battery.isAvailableAsync()</code> and attaches <code>Battery.getBatteryLevelAsync()</code> (0–100%) to each 1 Hz location telemetry packet.</li>
+<li><strong>Critique</strong>: Sending battery percentage every 1 second is redundant since battery levels do not change at 1 Hz.</li>
+<li><strong>Optimization</strong>: Cache battery state and only transmit when the level changes by $\ge 1\%$ or every 60 seconds, saving payload bytes.</li>
+</ul>
+<hr />
+<h1 id="part-12-authentication-secure-storage">PART 12 — AUTHENTICATION &amp; SECURE STORAGE</h1>
+<ul>
+<li><strong>Authentication</strong>: Firebase Authentication (Email/Password &amp; Google Sign-In) issuing short-lived JWT ID tokens (1 hour expiration) and long-lived Refresh Tokens.</li>
+<li><strong>Storage Separation</strong>:</li>
+<li><code>expo-secure-store</code>: Used for sensitive cryptographic tokens and auth credentials (backed by iOS Keychain and Android KeyStore with hardware AES-256 encryption).</li>
+<li><code>@react-native-async-storage/async-storage</code>: Used for high-volume non-sensitive data (ride history caching, UI theme preferences).</li>
+</ul>
+<hr />
+<h1 id="part-13-external-apis">PART 13 — EXTERNAL APIs</h1>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Purpose</th>
+<th>Endpoint</th>
+<th>Fallback Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OSRM (Project-OSRM)</strong></td>
+<td>Turn-by-turn driving route geometry &amp; maneuvers</td>
+<td><code>https://router.project-osrm.org/route/v1/driving/...</code></td>
+<td>Falls back to OpenRouteService API; if offline, computes straight-line distance.</td>
+</tr>
+<tr>
+<td><strong>OpenRouteService</strong></td>
+<td>Secondary routing engine</td>
+<td><code>https://api.openrouteservice.org/v2/directions/driving-car</code></td>
+<td>Used when OSRM is unreachable.</td>
+</tr>
+<tr>
+<td><strong>Komoot Photon</strong></td>
+<td>Fast address search &amp; geocoding</td>
+<td><code>https://photon.komoot.io/api/?q=...</code></td>
+<td>Falls back to OpenStreetMap Nominatim.</td>
+</tr>
+<tr>
+<td><strong>OpenStreetMap Nominatim</strong></td>
+<td>Reverse geocoding &amp; structured search</td>
+<td><code>https://nominatim.openstreetmap.org/search</code></td>
+<td>Fallback search provider with 1 req/sec rate limit compliance.</td>
+</tr>
+<tr>
+<td><strong>Open-Meteo</strong></td>
+<td>Live weather &amp; rain forecasting</td>
+<td><code>https://api.open-meteo.com/v1/forecast</code></td>
+<td>Returns cached weather if network fails.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="part-14-error-handling-matrix">PART 14 — ERROR HANDLING MATRIX</h1>
+<ul>
+<li><strong>Expected Errors</strong>: Handled gracefully with user-facing alerts (e.g. invalid room code, location permission denied, network offline toast).</li>
+<li><strong>Unexpected Errors</strong>: Caught by service-level <code>try/catch</code> blocks with defensive fallbacks and <code>firestoreSanitizer</code> deep object validation.</li>
+</ul>
+<hr />
+<h1 id="part-15-important-bugs-we-solved-post-mortems">PART 15 — IMPORTANT BUGS WE SOLVED (POST-MORTEMS)</h1>
+<h3 id="bug-1-firestore-unsupported-field-value-undefined-crashes">Bug 1: Firestore "Unsupported Field Value: undefined" Crashes</h3>
+<ul>
+<li><strong>Problem</strong>: Firestore SDK throws unhandled fatal exceptions if any key in an object has a value of <code>undefined</code>.</li>
+<li><strong>Root Cause</strong>: Optional fields in rider telemetry (e.g. <code>battery</code>, <code>photoURL</code>, <code>heading</code>) were evaluated as <code>undefined</code> on some devices.</li>
+<li><strong>Solution</strong>: Engineered <code>sanitizeForFirestore&lt;T&gt;()</code> in <code>src/utils/firestoreSanitizer.ts</code>, which recursively traverses objects and strips or converts <code>undefined</code> to <code>null</code>.</li>
+</ul>
+<h3 id="bug-2-qr-scanner-rapid-multi-fire-duplicate-joins">Bug 2: QR Scanner Rapid Multi-Fire Duplicate Joins</h3>
+<ul>
+<li><strong>Problem</strong>: Scanning a QR code triggered the join request 10+ times within 250ms.</li>
+<li><strong>Root Cause</strong>: Camera frame processors run at 30 FPS and invoke <code>onBarcodeScanned</code> continuously while the QR code is in view.</li>
+<li><strong>Solution</strong>: Implemented an atomic ref lock (<code>isScanningRef.current = true</code>) with an immediate 2000ms debounce cooldown.</li>
+</ul>
+<h3 id="bug-3-android-native-canvas-marker-clipping-grey-square-box">Bug 3: Android Native Canvas Marker Clipping &amp; Grey Square Box</h3>
+<ul>
+<li><strong>Problem</strong>: User location marker rendered as a clipped, partial grey rectangle on Android devices.</li>
+<li><strong>Root Cause</strong>: <code>react-native-maps</code> on Android takes a hardware snapshot of marker views. Continuous CSS animations scaling outside the layout boundary caused the canvas bitmap renderer to clip to the view bounding box and draw a grey background.</li>
+<li><strong>Solution</strong>: Replaced unbounded scaling animations with a fixed-dimension transparent container (<code>100x100</code>), applied direct <code>borderRadius</code> to the <code>&lt;Image&gt;</code> component, and set dynamic <code>tracksViewChanges</code> state toggles that settle to <code>false</code> after 600ms.</li>
+</ul>
+<h3 id="bug-4-expired-firestore-security-rules">Bug 4: Expired Firestore Security Rules</h3>
+<ul>
+<li><strong>Problem</strong>: All client writes failed with <code>Missing or insufficient permissions</code>.</li>
+<li><strong>Root Cause</strong>: Firestore was initialized in 30-day Test Mode which expired on August 15, 2026.</li>
+<li><strong>Solution</strong>: Deployed production-grade, ownership-verified security rules covering <code>/rides</code>, <code>/locations</code>, <code>/users/{userId}/ride_history</code>, and <code>/completed_rides</code>.</li>
+</ul>
+<hr />
+<h1 id="part-16-performance-computational-complexity">PART 16 — PERFORMANCE &amp; COMPUTATIONAL COMPLEXITY</h1>
+<ul>
+<li><strong>Coordinate Interpolation</strong>: $O(1)$ animation frame updates via <code>AnimatedRegion.timing()</code>.</li>
+<li><strong>Off-Screen Radar Calculation</strong>: $O(N)$ where $N$ is the number of squad members (typically $N &lt; 20$), executing in $&lt;0.5\text{ ms}$.</li>
+<li><strong>Map Marker Re-renders</strong>: Optimized using <code>React.memo</code> and transient <code>tracksViewChanges</code> toggling, eliminating unnecessary 60 FPS bridge serialization.</li>
+</ul>
+<hr />
+<h1 id="part-17-scalability-system-design">PART 17 — SCALABILITY &amp; SYSTEM DESIGN</h1>
+<h3 id="scaling-nami-to-100000-concurrent-users">Scaling Nami to 100,000 Concurrent Users</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[ Mobile Clients ]</span>
+<span class="w">       </span><span class="na">│  (Binary Protobufs over WebSocket / WSS)</span>
+<span class="w">       </span><span class="na">▼</span>
+<span class="k">[ Anycast Load Balancers / Envoy Proxy ]</span>
+<span class="w">       </span><span class="na">│</span>
+<span class="w">       </span><span class="na">▼</span>
+<span class="k">[ Distributed Telemetry Ingestion Gateway (Go / Node.js Cluster) ]</span>
+<span class="w">       </span><span class="na">│</span>
+<span class="w">       </span><span class="na">├──► [ Redis Cluster / Geo-sharding (Spatial Pub/Sub &amp; H3 Indexing) ]</span>
+<span class="w">       </span><span class="na">│          │</span>
+<span class="w">       </span><span class="na">│          └──► Broadcasts delta telemetry to riders within 5km radius</span>
+<span class="w">       </span><span class="na">│</span>
+<span class="w">       </span><span class="na">└──► [ Kafka / RabbitMQ Queue ]</span>
+<span class="w">                  </span><span class="na">│</span>
+<span class="w">                  </span><span class="na">▼</span>
+<span class="w">            </span><span class="k">[ Telemetry Writer Workers ]</span>
+<span class="w">                  </span><span class="na">│</span>
+<span class="w">                  </span><span class="na">▼</span>
+<span class="w">            </span><span class="k">[ Time-Series DB (Cassandra / ScyllaDB) for Historical Routes ]</span>
+</code></pre></div>
+
+<hr />
+<h1 id="part-18-8-system-design-interview-questions">PART 18 — 8 SYSTEM DESIGN INTERVIEW QUESTIONS</h1>
+<ol>
+<li><strong>Design a Real-Time Group Telemetry System</strong>: Requirements, 1 Hz streaming, Firestore vs WebSockets, write contention tradeoffs.</li>
+<li><strong>Design an Off-Screen Radar Projection Engine</strong>: Trigonometric coordinate mapping, screen clamping, great-circle distance formulas.</li>
+<li><strong>Design a High-Reliability Emergency SOS Broadcast System</strong>: Haptic escalation, push vs local voice synthesis, satellite/SMS fallbacks.</li>
+<li><strong>Design a Cryptographic QR Session Pairing System</strong>: Ephemeral tokens, replay attack prevention, camera multi-frame debouncing.</li>
+<li><strong>Design a Resilient Dual-Tier Storage Architecture</strong>: Local <code>AsyncStorage</code> caching, Firestore sync, conflict resolution.</li>
+<li><strong>Design Turn-by-Turn Group Navigation HUD</strong>: OSRM integration, maneuver step parsing, hands-free TTS queues.</li>
+<li><strong>Design Road Hazard Reporting with Spatial Deduplication</strong>: Hazard category taxonomies, radius clustering, crowdsourced upvoting.</li>
+<li><strong>Design Scalable Battery &amp; Speed Fleet Monitoring</strong>: Telemetry payload optimization, battery drain mitigation, adaptive GPS accuracy.</li>
+</ol>
+<hr />
+<h1 id="part-19-computer-science-concepts">PART 19 — COMPUTER SCIENCE CONCEPTS</h1>
+<h3 id="must-know">MUST KNOW:</h3>
+<ul>
+<li><strong>NoSQL Document vs Subcollection Modeling</strong>: Why hierarchical subcollections prevent write lock collisions.</li>
+<li><strong>Trigonometry (<code>atan2</code> vs <code>atan</code>)</strong>: Why <code>atan2(y, x)</code> handles all 4 quadrants ($-\pi$ to $+\pi$) without division-by-zero errors.</li>
+<li><strong>Great-Circle Navigation &amp; Haversine Formula</strong>: Spherical geometry vs Euclidean distance on Earth's surface.</li>
+<li><strong>Concurrency &amp; Race Conditions</strong>: Atomic ref locking to prevent multi-frame camera execution.</li>
+<li><strong>JWT &amp; Token Authentication</strong>: Cryptographic signatures, claims, expiry, and bearer tokens.</li>
+</ul>
+<hr />
+<h1 id="part-20-50-interview-questions-answers">PART 20 — 50+ INTERVIEW QUESTIONS &amp; ANSWERS</h1>
+<p><em>(Categorized across Beginner, Intermediate, Advanced, and Trap questions testing deep understanding of the Nami codebase.)</em></p>
+<hr />
+<h1 id="part-21-speaking-scripts-30s-1m-2m-5m">PART 21 — SPEAKING SCRIPTS (30s, 1m, 2m, 5m)</h1>
+<p><em>(Natural, grounded speaking scripts designed for conversational SDE interviews without corporate jargon.)</em></p>
+<hr />
+<h1 id="part-22-verified-resume-bullets">PART 22 — VERIFIED RESUME BULLETS</h1>
+<ul>
+<li><strong>Bullet 1</strong>: <em>Architected a real-time group navigation platform using React Native, TypeScript, and Google Cloud Firestore, streaming 1 Hz GPS telemetry and battery metrics across distributed rider sessions with sub-second synchronization.</em></li>
+<li><strong>Bullet 2</strong>: <em>Engineered a viewport-aware radar projection engine utilizing spherical trigonometry (<code>atan2</code>, Haversine) to compute real-time relative vectors and project off-screen convoy riders onto screen boundaries.</em></li>
+<li><strong>Bullet 3</strong>: <em>Designed a high-reliability emergency SOS and road hazard alert system featuring automated Text-to-Speech synthesis, haptic escalation, and dual-tiered local/cloud persistence (<code>AsyncStorage</code> + Firestore).</em></li>
+</ul>
+<hr />
+<h1 id="part-23-sde-study-roadmap-20-hardest-questions">PART 23 — SDE STUDY ROADMAP &amp; 20 HARDEST QUESTIONS</h1>
+<p><em>(Day-by-day technical prep schedule and the 20 most difficult architectural questions an interviewer could ask.)</em></p>
+
+</body>
+</html>

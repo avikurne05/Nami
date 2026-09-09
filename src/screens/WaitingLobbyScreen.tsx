@@ -149,7 +149,7 @@ export default function WaitingLobbyScreen({ route, navigation }: Props) {
     if (!ride) return;
     try {
       await Share.share({
-        message: `Join my group ride "${ride.name}" on Biker Radar!\n\nRoom Code: ${ride.roomCode}\nDestination: ${(ride.destination?.name || 'Destination').split(',')[0]}`,
+        message: `Join my group ride "${ride.name}" on Nami!\n\nRoom Code: ${ride.roomCode}\nDestination: ${(ride.destination?.name || 'Destination').split(',')[0]}`,
       });
     } catch (error) {
       console.error('Error sharing room code:', error);

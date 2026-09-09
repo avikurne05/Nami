@@ -22,7 +22,7 @@ export const NavigationService = {
       const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson&steps=true`;
       const response = await fetch(osrmUrl, {
         headers: {
-          'User-Agent': 'BikeRadarApp/1.0.0 (contact@bikerradar.com)',
+          'User-Agent': 'NamiApp/1.0.0',
         },
       });
 

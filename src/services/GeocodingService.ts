@@ -57,7 +57,7 @@ export const GeocodingService = {
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanQuery)}&limit=5`;
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'BikerRadarApp/1.0.0 (contact@bikerradar.com)',
+          'User-Agent': 'NamiApp/1.0.0',
         },
       });
 

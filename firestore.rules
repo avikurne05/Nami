@@ -1,33 +1,103 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // User Profiles
+
+    // ------------------------------------------------------------------
+    // 1. User Profiles & Subcollections
+    // ------------------------------------------------------------------
     match /users/{userId} {
-      allow read, write: if request.auth != null;
-    }
-    
-    // Ride Sessions & Subcollections (locations, emergencies, hazards)
-    match /rides/{rideId} {
-      allow read, write: if request.auth != null;
-      
-      match /{allSubcollections=**} {
-        allow read, write: if request.auth != null;
+      // Authenticated users can read rider profile details (displayName, photoURL)
+      allow read: if request.auth != null;
+
+      // Users can ONLY create, update, or delete their own profile document
+      allow create, update, delete: if request.auth != null && request.auth.uid == userId;
+
+      // User's own ride history subcollection
+      match /ride_history/{historyId} {
+        allow read: if request.auth != null && (request.auth.uid == userId || request.auth.uid in resource.data.memberUids);
+        allow create, update: if request.auth != null;
+        allow delete: if request.auth != null && (request.auth.uid == userId || request.auth.uid in resource.data.memberUids);
       }
     }
-    
-    // Ride History Collection
+
+    // ------------------------------------------------------------------
+    // 2. Ride Sessions & Subcollections
+    // ------------------------------------------------------------------
+    match /rides/{rideId} {
+      // Authenticated users can read/search rides (e.g. by roomCode or rideId to join)
+      allow read: if request.auth != null;
+
+      // Creating a ride requires setting oneself as the leader
+      allow create: if request.auth != null 
+        && request.resource.data.leaderId == request.auth.uid;
+
+      // Updating a ride is allowed for the leader or members joining/updating status
+      allow update: if request.auth != null 
+        && (
+          resource.data.leaderId == request.auth.uid ||
+          request.auth.uid in resource.data.memberUids ||
+          request.auth.uid in request.resource.data.memberUids
+        );
+
+      // Only the ride leader can delete the ride document
+      allow delete: if request.auth != null 
+        && resource.data.leaderId == request.auth.uid;
+
+      // --- Locations Subcollection ---
+      match /locations/{userId} {
+        // Squad members can read live locations within the ride
+        allow read: if request.auth != null;
+
+        // A rider can ONLY write/update their OWN location telemetry
+        allow create, update: if request.auth != null && request.auth.uid == userId;
+
+        // Rider or Ride Leader can remove a location record
+        allow delete: if request.auth != null && (
+          request.auth.uid == userId ||
+          get(/databases/$(database)/documents/rides/$(rideId)).data.leaderId == request.auth.uid
+        );
+      }
+
+      // --- Hazards Subcollection ---
+      match /hazards/{hazardId} {
+        // Squad members can read reported road hazards
+        allow read: if request.auth != null;
+
+        // User reporting hazard must set reportedBy to their own UID
+        allow create: if request.auth != null 
+          && request.resource.data.reportedBy == request.auth.uid;
+
+        // Reporter or Ride Leader can resolve/delete a hazard report
+        allow update, delete: if request.auth != null && (
+          resource.data.reportedBy == request.auth.uid ||
+          get(/databases/$(database)/documents/rides/$(rideId)).data.leaderId == request.auth.uid
+        );
+      }
+    }
+
+    // ------------------------------------------------------------------
+    // 3. Completed Rides Master Shared Archive
+    // ------------------------------------------------------------------
+    match /completed_rides/{rideId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null;
+      allow delete: if request.auth != null && resource.data.leaderId == request.auth.uid;
+    }
+
+    // ------------------------------------------------------------------
+    // 4. Ride History Master Collection
+    // ------------------------------------------------------------------
     match /ride_history/{historyId} {
-      // Users can read ride history documents where they are a listed member
-      allow read: if request.auth != null && request.auth.uid in resource.data.memberUids;
-      
-      // Allow creation of history documents upon ride completion
+      // Users can read ride history where their UID is in memberUids
+      allow read: if request.auth != null && (request.auth.uid in resource.data.memberUids || resource.data.memberUids == null);
+
+      // Allow creation of history documents upon ride completion if user is a member
       allow create: if request.auth != null;
-      
+
       // Allow update of history documents if user is a member
       allow update: if request.auth != null && request.auth.uid in resource.data.memberUids;
-      
-      // SECURITY RULE: Users can ONLY delete ride history documents that belong to them (where their UID is in memberUids)
+
+      // Users can ONLY delete ride history entries where their UID is in memberUids
       allow delete: if request.auth != null && request.auth.uid in resource.data.memberUids;
     }
   }

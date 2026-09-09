@@ -13,7 +13,8 @@ interface ThemeContextType {
   setThemeMode: (mode: ThemeMode) => Promise<void>;
 }
 
-const THEME_STORAGE_KEY = 'bikerradar_theme_mode';
+const THEME_STORAGE_KEY = 'nami_theme_mode';
+const LEGACY_THEME_STORAGE_KEY = 'bikerradar_theme_mode';
 
 const ThemeContext = createContext<ThemeContextType>({
   themeMode: 'light',
@@ -35,7 +36,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             if (stored === 'light' || stored === 'dark' || stored === 'system') {
               setThemeModeState(stored);
             } else {
-              setThemeModeState('light');
+              // Try legacy key
+              AsyncStorage.getItem(LEGACY_THEME_STORAGE_KEY).then((legacyStored) => {
+                if (legacyStored === 'light' || legacyStored === 'dark' || legacyStored === 'system') {
+                  setThemeModeState(legacyStored);
+                } else {
+                  setThemeModeState('light');
+                }
+              }).catch(() => setThemeModeState('light'));
             }
           })
           .catch(() => {});

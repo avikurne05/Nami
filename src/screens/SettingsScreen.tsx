@@ -295,7 +295,7 @@ export default function SettingsScreen({ navigation }: Props) {
       <ConfirmationBottomSheet
         visible={showSignOutModal}
         title="Sign Out?"
-        message="Are you sure you want to sign out of Biker Radar?"
+        message="Are you sure you want to sign out of Nami?"
         confirmText="Sign Out"
         cancelText="Cancel"
         isDestructive={true}

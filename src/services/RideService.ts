@@ -13,14 +13,72 @@ import {
   deleteDoc,
   writeBatch,
 } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db, auth } from '../firebase/config';
 import { RideSession, RideHistoryEntry, CompletedRideMaster } from '../types';
 import { generateRoomCode } from '../utils';
 import { sanitizeForFirestore, validateAndSanitizeRidePayload } from '../utils/firestoreSanitizer';
-import { generateBikerRadarJoinToken, generateBikerRadarQRPayload, parseBikerRadarQRPayload } from '../utils/qrCodeGenerator';
+import { generateNamiJoinToken, generateNamiQRPayload, parseNamiQRPayload } from '../utils/qrCodeGenerator';
 
 // Configurable inactivity timeout (default 24 hours)
 export const RIDE_EXPIRATION_TIMEOUT_MS = 24 * 60 * 60 * 1000;
+const LOCAL_HISTORY_STORAGE_PREFIX = '@nami_ride_history_';
+
+async function saveToLocalHistory(userId: string, entry: RideHistoryEntry): Promise<void> {
+  if (!userId || !entry) return;
+  try {
+    const key = `${LOCAL_HISTORY_STORAGE_PREFIX}${userId}`;
+    const raw = await AsyncStorage.getItem(key);
+    const list: RideHistoryEntry[] = raw ? JSON.parse(raw) : [];
+    const existsIdx = list.findIndex(
+      (h) => h.id === entry.id || (entry.rideId && h.rideId === entry.rideId)
+    );
+    if (existsIdx >= 0) {
+      list[existsIdx] = { ...list[existsIdx], ...entry };
+    } else {
+      list.unshift(entry);
+    }
+    await AsyncStorage.setItem(key, JSON.stringify(list.slice(0, 50)));
+  } catch (e) {
+    console.warn('saveToLocalHistory failed:', e);
+  }
+}
+
+async function getFromLocalHistory(userId: string): Promise<RideHistoryEntry[]> {
+  if (!userId) return [];
+  try {
+    const key = `${LOCAL_HISTORY_STORAGE_PREFIX}${userId}`;
+    const raw = await AsyncStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.warn('getFromLocalHistory failed:', e);
+    return [];
+  }
+}
+
+async function removeFromLocalHistory(userId: string, historyId: string, rideId?: string): Promise<void> {
+  if (!userId || !historyId) return;
+  try {
+    const key = `${LOCAL_HISTORY_STORAGE_PREFIX}${userId}`;
+    const raw = await AsyncStorage.getItem(key);
+    if (!raw) return;
+    const list: RideHistoryEntry[] = JSON.parse(raw);
+    const filtered = list.filter((h) => h.id !== historyId && (!rideId || h.rideId !== rideId));
+    await AsyncStorage.setItem(key, JSON.stringify(filtered));
+  } catch (e) {
+    console.warn('removeFromLocalHistory failed:', e);
+  }
+}
+
+async function clearLocalHistory(userId: string): Promise<void> {
+  if (!userId) return;
+  try {
+    const key = `${LOCAL_HISTORY_STORAGE_PREFIX}${userId}`;
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.warn('clearLocalHistory failed:', e);
+  }
+}
 
 export const RideService = {
   /**
@@ -39,8 +97,8 @@ export const RideService = {
     const roomCode = generateRoomCode();
     const rideRef = doc(collection(db, 'rides'));
     const now = Date.now();
-    const joinToken = generateBikerRadarJoinToken();
-    const qrPayload = generateBikerRadarQRPayload(rideRef.id, roomCode, leaderId, joinToken);
+    const joinToken = generateNamiJoinToken();
+    const qrPayload = generateNamiQRPayload(rideRef.id, roomCode, leaderId, joinToken);
 
     const newRide: RideSession = {
       id: rideRef.id,
@@ -63,8 +121,7 @@ export const RideService = {
       qrPayload,
     };
 
-    const sanitizedRide = sanitizeForFirestore(newRide);
-    await setDoc(rideRef, sanitizedRide);
+    await setDoc(rideRef, sanitizeForFirestore(newRide as unknown as Record<string, unknown>));
     return rideRef.id;
   },
 
@@ -126,8 +183,8 @@ export const RideService = {
   },
 
   /**
-   * Validates a scanned QR payload or room code with cryptographic joinToken verification
-   * and network connectivity distinction.
+   * Validates a scanned QR payload or room code with primary `rideId` resolution,
+   * mismatch detection, cryptographic joinToken verification, and network distinction.
    */
   async validateAndJoinRide(
     rawPayload: string,
@@ -139,8 +196,11 @@ export const RideService = {
     errorCode?: 'OFFLINE' | 'INVALID_TOKEN' | 'NOT_FOUND' | 'EXPIRED';
     errorMessage?: string;
   }> {
-    const parsed = parseBikerRadarQRPayload(rawPayload);
-    if (!parsed || !parsed.roomCode) {
+    console.log('[QR] Scanned payload:', rawPayload);
+
+    const parsed = parseNamiQRPayload(rawPayload);
+    if (!parsed || (!parsed.roomCode && !parsed.rideId)) {
+      console.warn('[QR] Failed to parse QR payload');
       return {
         success: false,
         errorCode: 'INVALID_TOKEN',
@@ -148,29 +208,64 @@ export const RideService = {
       };
     }
 
+    console.log('[QR] Parsed rideId:', parsed.rideId || 'None (Legacy QR)');
+    console.log('[QR] Parsed roomCode:', parsed.roomCode);
+
     try {
-      let rideSnap;
-      if (parsed.rideId) {
-        rideSnap = await getDoc(doc(db, 'rides', parsed.rideId));
-      }
-
       let rideData: RideSession | null = null;
-      let targetRideId: string = parsed.rideId || '';
+      let targetRideId: string = '';
 
-      if (rideSnap && rideSnap.exists()) {
-        rideData = { id: rideSnap.id, ...rideSnap.data() } as RideSession;
-      } else {
-        const ridesRef = collection(db, 'rides');
-        const q = query(ridesRef, where('roomCode', '==', parsed.roomCode));
-        const querySnapshot = await getDocs(q);
+      // ── PRIMARY IDENTIFIER: Use rideId if encoded in QR payload ──
+      if (parsed.rideId) {
+        const rideRef = doc(db, 'rides', parsed.rideId);
+        const rideSnap = await getDoc(rideRef);
 
-        if (querySnapshot.empty) {
+        if (!rideSnap.exists()) {
+          console.warn('[QR] Ride document not found by rideId:', parsed.rideId);
           return {
             success: false,
             errorCode: 'NOT_FOUND',
             errorMessage: 'Ride Not Found',
           };
         }
+
+        rideData = { id: rideSnap.id, ...rideSnap.data() } as RideSession;
+        targetRideId = rideSnap.id;
+
+        // PREVENT ROOM/QR MISMATCH: Verify roomCode & rideId match Firestore document
+        if (parsed.roomCode && rideData.roomCode && parsed.roomCode !== rideData.roomCode) {
+          console.warn('[QR] Room code mismatch! QR roomCode:', parsed.roomCode, 'Firestore roomCode:', rideData.roomCode);
+          return {
+            success: false,
+            errorCode: 'INVALID_TOKEN',
+            errorMessage: 'QR information does not match this ride.',
+          };
+        }
+
+        if (rideData.id !== parsed.rideId) {
+          console.warn('[QR] Ride ID mismatch!');
+          return {
+            success: false,
+            errorCode: 'INVALID_TOKEN',
+            errorMessage: 'Invalid Ride QR',
+          };
+        }
+      } else {
+        // ── LEGACY QR FALLBACK: Query by roomCode ──
+        console.log('[QR] Searching by roomCode query:', parsed.roomCode);
+        const ridesRef = collection(db, 'rides');
+        const q = query(ridesRef, where('roomCode', '==', parsed.roomCode));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.warn('[QR] No ride found with roomCode:', parsed.roomCode);
+          return {
+            success: false,
+            errorCode: 'NOT_FOUND',
+            errorMessage: 'Ride Not Found',
+          };
+        }
+
         const foundDoc = querySnapshot.docs[0];
         targetRideId = foundDoc.id;
         rideData = { id: foundDoc.id, ...foundDoc.data() } as RideSession;
@@ -184,12 +279,14 @@ export const RideService = {
         };
       }
 
+      console.log('[QR] Firestore ride found:', targetRideId, 'Status:', rideData.status);
+
       // 1. Status & Expiration Check
       if (rideData.status === 'completed' || rideData.status === 'cancelled' || rideData.status === 'ended') {
         return {
           success: false,
           errorCode: 'EXPIRED',
-          errorMessage: 'Ride Expired',
+          errorMessage: 'Ride Expired or Ended',
         };
       }
 
@@ -199,12 +296,13 @@ export const RideService = {
         return {
           success: false,
           errorCode: 'EXPIRED',
-          errorMessage: 'Ride Expired',
+          errorMessage: 'Ride Expired due to inactivity',
         };
       }
 
       // 2. Cryptographic joinToken Verification (if payload contains token)
       if (parsed.joinToken && rideData.joinToken && parsed.joinToken !== rideData.joinToken) {
+        console.warn('[QR] Join token mismatch or revoked');
         return {
           success: false,
           errorCode: 'INVALID_TOKEN',
@@ -213,6 +311,7 @@ export const RideService = {
       }
 
       // 3. Join Ride Session in Firestore
+      console.log('[QR] Joining ride:', targetRideId, 'for userId:', userId);
       if (userId && !rideData.members.includes(userId)) {
         await updateDoc(doc(db, 'rides', targetRideId), {
           members: arrayUnion(userId),
@@ -220,13 +319,15 @@ export const RideService = {
         });
       }
 
+      console.log('[QR] Navigation target:', targetRideId, 'Status:', rideData.status);
+
       return {
         success: true,
         rideId: targetRideId,
         status: rideData.status,
       };
     } catch (e: any) {
-      console.warn('validateAndJoinRide error:', e);
+      console.warn('[QR] validateAndJoinRide error:', e);
       const isNetworkError =
         e?.message?.includes('network') ||
         e?.message?.includes('offline') ||
@@ -496,8 +597,9 @@ export const RideService = {
 
     // 2. Write Per-User Standalone Entries for ALL members
     const primaryHistoryRef = doc(collection(db, 'ride_history'));
+    const historyId = primaryHistoryRef.id;
     const historyEntry: RideHistoryEntry = {
-      id: primaryHistoryRef.id,
+      id: historyId,
       rideId,
       name: rideName,
       leaderName: leaderName,
@@ -514,13 +616,20 @@ export const RideService = {
 
     const sanitizedHistory = sanitizeForFirestore(historyEntry);
 
+    // Save immediately to local storage for all members for 0ms retrieval
+    for (const uid of membersList) {
+      if (uid) {
+        saveToLocalHistory(uid, sanitizedHistory).catch(() => {});
+      }
+    }
+
     try {
       const batch = writeBatch(db);
       batch.set(primaryHistoryRef, sanitizedHistory);
 
       membersList.forEach((uid) => {
         if (uid) {
-          const userHistRef = doc(db, 'users', uid, 'ride_history', rideId);
+          const userHistRef = doc(db, 'users', uid, 'ride_history', historyId);
           batch.set(userHistRef, sanitizedHistory);
         }
       });
@@ -535,7 +644,7 @@ export const RideService = {
       for (const uid of membersList) {
         if (uid) {
           try {
-            const userHistRef = doc(db, 'users', uid, 'ride_history', rideId);
+            const userHistRef = doc(db, 'users', uid, 'ride_history', historyId);
             await setDoc(userHistRef, sanitizedHistory);
           } catch (e) {}
         }
@@ -546,53 +655,103 @@ export const RideService = {
   },
 
   /**
-   * Retrieve ride history for a user (combines user-specific history and legacy history)
+   * Retrieve ride history for a user (combines instant local cache, user subcollection, and top-level collection)
    */
   async getRideHistory(userId: string): Promise<RideHistoryEntry[]> {
     if (!userId) return [];
     try {
-      // 1. Fetch user-specific subcollection history
-      const userHistRef = collection(db, 'users', userId, 'ride_history');
-      const userSnap = await getDocs(userHistRef);
       const historyMap: { [id: string]: RideHistoryEntry } = {};
 
-      userSnap.forEach((docSnap) => {
-        historyMap[docSnap.id] = { id: docSnap.id, ...docSnap.data() } as RideHistoryEntry;
-      });
-
-      // 2. Fetch top-level history for backward compatibility
-      const historyRef = collection(db, 'ride_history');
-      const q = query(historyRef, where('memberUids', 'array-contains', userId));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((docSnap) => {
-        const entry = { id: docSnap.id, ...docSnap.data() } as RideHistoryEntry;
-        if (!historyMap[entry.id] && !historyMap[entry.rideId]) {
-          historyMap[entry.id] = entry;
+      // 1. Instant load from local AsyncStorage
+      const localEntries = await getFromLocalHistory(userId);
+      localEntries.forEach((entry) => {
+        if (entry && (entry.id || entry.rideId)) {
+          const key = entry.id || entry.rideId;
+          historyMap[key] = entry;
         }
       });
 
+      // 2. Fetch user-specific subcollection history from Firestore
+      try {
+        const userHistRef = collection(db, 'users', userId, 'ride_history');
+        const userSnap = await getDocs(userHistRef);
+        userSnap.forEach((docSnap) => {
+          const data = docSnap.data();
+          const docId = docSnap.id;
+          const entry = { ...data, id: docId } as RideHistoryEntry;
+          historyMap[docId] = entry;
+          if (entry.rideId) historyMap[entry.rideId] = entry;
+        });
+      } catch (subErr) {
+        console.warn('Could not read user subcollection ride_history:', subErr);
+      }
+
+      // 3. Fetch top-level history for backward compatibility
+      try {
+        const historyRef = collection(db, 'ride_history');
+        const q = query(historyRef, where('memberUids', 'array-contains', userId));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const docId = docSnap.id;
+          const entry = { ...data, id: docId } as RideHistoryEntry;
+          if (!historyMap[docId] && (!entry.rideId || !historyMap[entry.rideId])) {
+            historyMap[docId] = entry;
+          }
+        });
+      } catch (topErr) {
+        console.warn('Could not query top-level ride_history:', topErr);
+      }
+
+      // 4. Merge, sort by completion date, and cache locally
       const historyList = Object.values(historyMap);
-      historyList.sort((a, b) => (b.endTime || 0) - (a.endTime || 0));
-      return historyList.slice(0, 30);
+      historyList.sort((a, b) => (b.endTime || b.startTime || 0) - (a.endTime || a.startTime || 0));
+
+      // Update local storage with full fresh list
+      const top30 = historyList.slice(0, 30);
+      if (top30.length > 0) {
+        try {
+          const key = `${LOCAL_HISTORY_STORAGE_PREFIX}${userId}`;
+          await AsyncStorage.setItem(key, JSON.stringify(top30));
+        } catch (e) {}
+      }
+
+      return top30;
     } catch (e) {
       console.warn('getRideHistory failed:', e);
-      return [];
+      // Fallback to local storage on any error
+      return getFromLocalHistory(userId);
     }
   },
 
   /**
    * Delete a single ride history entry for a user
    */
-  async deleteRideHistory(historyId: string, userId?: string): Promise<void> {
+  async deleteRideHistory(historyId: string, userId?: string, rideId?: string): Promise<void> {
+    if (!historyId) return;
+    const uid = userId || auth.currentUser?.uid;
     try {
+      // 1. Delete from local cache immediately
+      if (uid) {
+        await removeFromLocalHistory(uid, historyId, rideId);
+      }
+
+      // 2. Top-level ride_history document
       const historyRef = doc(db, 'ride_history', historyId);
       await deleteDoc(historyRef).catch(() => {});
-      if (userId) {
-        const userHistRef = doc(db, 'users', userId, 'ride_history', historyId);
+
+      // 3. User subcollection history document
+      if (uid) {
+        const userHistRef = doc(db, 'users', uid, 'ride_history', historyId);
         await deleteDoc(userHistRef).catch(() => {});
+
+        if (rideId && rideId !== historyId) {
+          const legacyUserHistRef = doc(db, 'users', uid, 'ride_history', rideId);
+          await deleteDoc(legacyUserHistRef).catch(() => {});
+        }
       }
     } catch (e) {
-      // Quiet fallback
+      console.warn('deleteRideHistory failed:', e);
     }
   },
 
@@ -602,6 +761,10 @@ export const RideService = {
   async clearAllRideHistory(userId: string): Promise<void> {
     if (!userId) return;
     try {
+      // 1. Clear local cache immediately
+      await clearLocalHistory(userId);
+
+      // 2. Clear top-level history records
       const historyRef = collection(db, 'ride_history');
       const q = query(historyRef, where('memberUids', 'array-contains', userId));
       const querySnapshot = await getDocs(q);
@@ -609,16 +772,16 @@ export const RideService = {
       querySnapshot.forEach((docSnap) => {
         batch.delete(docSnap.ref);
       });
-      await batch.commit();
+      await batch.commit().catch(() => {});
 
-      // Clear user subcollection
+      // 3. Clear user subcollection
       const userHistRef = collection(db, 'users', userId, 'ride_history');
       const userSnap = await getDocs(userHistRef);
       const batch2 = writeBatch(db);
       userSnap.forEach((docSnap) => {
         batch2.delete(docSnap.ref);
       });
-      await batch2.commit();
+      await batch2.commit().catch(() => {});
     } catch (e) {
       console.warn('clearAllRideHistory failed:', e);
     }

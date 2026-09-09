@@ -14,7 +14,7 @@ Notifications.setNotificationHandler({
 // Set up Android notification channel safely at module load
 if (Platform.OS === 'android') {
   Notifications.setNotificationChannelAsync('default', {
-    name: 'Biker Radar Alerts',
+    name: 'Nami Alerts',
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
     lightColor: '#3B82F6',

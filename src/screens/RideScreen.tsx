@@ -37,7 +37,7 @@ import { useTheme } from '../hooks/useTheme';
 import { NavigationMapStyleDark, NavigationMapStyleLight } from '../constants/MapStyles';
 import { AnimatedRiderMarker, getRiderColor } from '../components/AnimatedRiderMarker';
 import { SelectedRiderCard } from '../components/SelectedRiderCard';
-import { BikerRadarEdgeIndicator } from '../components/BikerRadarEdgeIndicator';
+import { NamiEdgeIndicator } from '../components/BikerRadarEdgeIndicator';
 import { RiderClusterMarker } from '../components/RiderClusterMarker';
 import { ExpandableFloatingMenu, ActiveMenuType } from '../components/ExpandableFloatingMenu';
 import { ConfirmationBottomSheet } from '../components/ConfirmationBottomSheet';
@@ -718,7 +718,7 @@ export default function RideScreen({ route, navigation }: Props) {
           latitudeDelta: 0.015,
           longitudeDelta: 0.015,
         }}
-        showsUserLocation={true}
+        showsUserLocation={false}
         showsMyLocationButton={false}
         showsPointsOfInterest={false}
         showsBuildings={false}
@@ -894,8 +894,8 @@ export default function RideScreen({ route, navigation }: Props) {
         })}
       </MapView>
 
-      {/* Off-Screen Biker Radar Edge Indicators (Stage 5) */}
-      <BikerRadarEdgeIndicator
+      {/* Off-Screen Nami Edge Indicators */}
+      <NamiEdgeIndicator
         riders={Object.values(locations || {})}
         currentUserId={user?.uid}
         leaderId={ride?.leaderId}
@@ -1182,7 +1182,7 @@ export default function RideScreen({ route, navigation }: Props) {
               color: '#00E5FF',
               onPress: () => {
                 Share.share({
-                  message: `Track my ride live on Biker Radar: https://maps.google.com/?q=${userLoc?.latitude},${userLoc?.longitude}`,
+                  message: `Track my ride live on Nami: https://maps.google.com/?q=${userLoc?.latitude},${userLoc?.longitude}`,
                 }).catch(() => {});
               },
             },

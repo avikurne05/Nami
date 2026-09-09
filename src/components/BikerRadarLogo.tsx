@@ -10,7 +10,7 @@ interface Props {
   accentColor?: string;
 }
 
-export const BikerRadarLogo: React.FC<Props> = ({
+export const NamiLogo: React.FC<Props> = ({
   size = 120,
   showRings = true,
   animatedScale,
@@ -18,13 +18,13 @@ export const BikerRadarLogo: React.FC<Props> = ({
   accentColor = '#00E5FF',
 }) => {
   const badgeSize = Math.round(size * 0.58);
-  const iconSize = Math.round(badgeSize * 0.54);
+  const iconSize = Math.round(badgeSize * 0.58);
   const ring1Size = size;
   const ring2Size = Math.round(size * 0.78);
 
   const logoContent = (
     <View style={[styles.container, { width: size, height: size }]}>
-      {/* Outer Radar Grid Ring */}
+      {/* Outer Navigation Orbit Ring */}
       {showRings && (
         <View
           style={[
@@ -33,24 +33,24 @@ export const BikerRadarLogo: React.FC<Props> = ({
               width: ring1Size,
               height: ring1Size,
               borderRadius: ring1Size / 2,
-              borderColor: 'rgba(0, 229, 255, 0.18)',
+              borderColor: 'rgba(0, 229, 255, 0.22)',
               borderWidth: 1.5,
             },
           ]}
         >
-          {/* Radar Cardinal Ticks */}
+          {/* Compass Cardinal Ticks */}
           <View style={[styles.tick, styles.tickTop, { backgroundColor: accentColor }]} />
           <View style={[styles.tick, styles.tickBottom, { backgroundColor: accentColor }]} />
           <View style={[styles.tick, styles.tickLeft, { backgroundColor: accentColor }]} />
           <View style={[styles.tick, styles.tickRight, { backgroundColor: accentColor }]} />
 
-          {/* Group Rider Radar Dots */}
+          {/* Connected Group Journey Nodes */}
           <View style={[styles.riderDot, styles.dot1, { backgroundColor: accentColor }]} />
           <View style={[styles.riderDot, styles.dot2, { backgroundColor: primaryColor }]} />
         </View>
       )}
 
-      {/* Middle Concentric Radar Line */}
+      {/* Middle Navigation Path Ring */}
       {showRings && (
         <View
           style={[
@@ -59,7 +59,7 @@ export const BikerRadarLogo: React.FC<Props> = ({
               width: ring2Size,
               height: ring2Size,
               borderRadius: ring2Size / 2,
-              borderColor: 'rgba(26, 115, 232, 0.25)',
+              borderColor: 'rgba(26, 115, 232, 0.3)',
               borderWidth: 1,
               borderStyle: 'dashed',
             },
@@ -67,30 +67,30 @@ export const BikerRadarLogo: React.FC<Props> = ({
         />
       )}
 
-      {/* Center Shield Emblem */}
+      {/* Center Navigation Emblem Disc */}
       <View
         style={[
           styles.badge,
           {
             width: badgeSize,
             height: badgeSize,
-            borderRadius: badgeSize * 0.3,
+            borderRadius: badgeSize * 0.35,
             borderColor: accentColor,
             borderWidth: 2,
             shadowColor: accentColor,
           },
         ]}
       >
-        {/* Dual Layer Core Icon (Helmet / Compass + Navigation Pin) */}
+        {/* Core Navigation Compass + Precision Arrow */}
         <View style={styles.iconWrapper}>
-          <MaterialCommunityIcons
-            name="motorbike"
-            size={iconSize * 0.85}
+          <Ionicons
+            name="compass-outline"
+            size={iconSize}
             color="#FFFFFF"
             style={styles.mainIcon}
           />
           <View style={styles.accentPin}>
-            <Ionicons name="navigate" size={iconSize * 0.45} color={accentColor} />
+            <Ionicons name="navigate-sharp" size={iconSize * 0.55} color={accentColor} />
           </View>
         </View>
       </View>
@@ -107,6 +107,8 @@ export const BikerRadarLogo: React.FC<Props> = ({
 
   return logoContent;
 };
+
+export const BikerRadarLogo = NamiLogo;
 
 const styles = StyleSheet.create({
   container: {

@@ -47,6 +47,7 @@ export default function JoinRideScreen({ navigation }: Props) {
   const [torchOn, setTorchOn] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'back' | 'front'>('back');
   const [scanned, setScanned] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
   const [qrErrorMessage, setQrErrorMessage] = useState<string | null>(null);
   const [scanSuccess, setScanSuccess] = useState(false);
 
@@ -165,7 +166,9 @@ export default function JoinRideScreen({ navigation }: Props) {
       const text = await Clipboard.getString();
       if (text) {
         let cleaned = text.trim().toUpperCase();
-        if (cleaned.includes('BIKERRADAR:')) {
+        if (cleaned.includes('NAMI:')) {
+          cleaned = cleaned.split('NAMI:')[1] || '';
+        } else if (cleaned.includes('BIKERRADAR:')) {
           cleaned = cleaned.split('BIKERRADAR:')[1] || '';
         }
         cleaned = cleaned.replace(/[^A-Z0-9]/g, '').slice(0, CODE_LENGTH);
@@ -189,6 +192,7 @@ export default function JoinRideScreen({ navigation }: Props) {
     setQrErrorMessage(null);
     setScanSuccess(false);
     setScanned(false);
+    setIsJoining(false);
 
     try {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -210,33 +214,43 @@ export default function JoinRideScreen({ navigation }: Props) {
   // --- Automatic Real Barcode Scanned Event ---
   const handleBarcodeScanned = useCallback(
     async ({ data }: { data: string }) => {
-      if (scanned || scanSuccess || !user) return;
+      if (scanned || isJoining || scanSuccess || !user) return;
 
+      // ── LOCK SCANNER IMMEDIATELY TO PREVENT DOUBLE SCANNING ──
       setScanned(true);
+      setIsJoining(true);
+      setQrErrorMessage(null);
 
       if (!data || !data.trim()) {
-        setQrErrorMessage('Invalid Biker Radar QR Code');
+        setIsJoining(false);
+        setQrErrorMessage('Invalid Nami QR Code');
         Vibration.vibrate([0, 80, 80, 80]);
         resetScannerDebounced();
         return;
       }
 
-      // Real-time Firestore ride validation with joinToken & network distinction
+      console.log('[QR Scanner] Barcode detected:', data);
+
+      // Real-time Firestore ride validation with primary rideId lookup
       const result = await RideService.validateAndJoinRide(data, user.uid);
 
-      if (!result.success) {
-        setQrErrorMessage(result.errorMessage || 'Invalid Biker Radar QR Code');
+      if (!result.success || !result.rideId) {
+        setIsJoining(false);
+        setQrErrorMessage(result.errorMessage || 'Invalid Nami QR Code');
         Vibration.vibrate([0, 80, 80, 80]);
         resetScannerDebounced();
         return;
       }
 
-      // ── Valid & Verified QR Code Detected ──
+      // ── Valid & Verified Firestore Join Successful ──
       Vibration.vibrate(100);
+      setIsJoining(false);
       setScanSuccess(true);
       setQrErrorMessage(null);
 
-      // Auto-close scanner and navigate directly to Lobby or Active Ride
+      console.log('[QR Scanner] Join verified! Target rideId:', result.rideId, 'Status:', result.status);
+
+      // Auto-close scanner and navigate directly to the exact target rideId
       setTimeout(() => {
         setShowScannerModal(false);
         setScanSuccess(false);
@@ -245,15 +259,16 @@ export default function JoinRideScreen({ navigation }: Props) {
         } else {
           navigation.replace('WaitingLobby', { rideId: result.rideId! });
         }
-      }, 600);
+      }, 500);
     },
-    [scanned, scanSuccess, user, navigation]
+    [scanned, isJoining, scanSuccess, user, navigation]
   );
 
   const resetScannerDebounced = () => {
     if (scanDebounceTimer.current) clearTimeout(scanDebounceTimer.current);
     scanDebounceTimer.current = setTimeout(() => {
       setScanned(false);
+      setIsJoining(false);
       setQrErrorMessage(null);
     }, 2000);
   };
@@ -469,8 +484,16 @@ export default function JoinRideScreen({ navigation }: Props) {
                 </View>
               </View>
 
+              {/* Joining in Progress Banner */}
+              {isJoining && (
+                <View style={styles.joiningBanner}>
+                  <ActivityIndicator color="#FFFFFF" style={{ marginRight: 10 }} />
+                  <Text style={styles.joiningBannerText}>Joining ride...</Text>
+                </View>
+              )}
+
               {/* Invalid QR Warning Banner */}
-              {qrErrorMessage && (
+              {qrErrorMessage && !isJoining && (
                 <View style={styles.invalidBanner}>
                   <Ionicons name="alert-circle" size={20} color="#EF4444" style={{ marginRight: 8 }} />
                   <Text style={styles.invalidBannerText}>{qrErrorMessage}</Text>
@@ -478,10 +501,10 @@ export default function JoinRideScreen({ navigation }: Props) {
               )}
 
               {/* Valid QR Success Banner */}
-              {scanSuccess && (
+              {scanSuccess && !isJoining && (
                 <View style={styles.successBanner}>
                   <Ionicons name="checkmark-circle" size={22} color="#10B981" style={{ marginRight: 8 }} />
-                  <Text style={styles.successBannerText}>Valid Biker Radar QR Code!</Text>
+                  <Text style={styles.successBannerText}>Joined successfully!</Text>
                 </View>
               )}
             </View>
@@ -741,6 +764,22 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     alignSelf: 'center',
+  },
+  joiningBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(59, 130, 246, 0.95)',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 14,
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  joiningBannerText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
   },
   invalidBannerText: {
     color: '#FFFFFF',

@@ -1,4 +1,4 @@
-export interface BikerRadarQRPayload {
+export interface NamiQRPayload {
   version: number;
   rideId: string;
   roomCode: string;
@@ -7,19 +7,23 @@ export interface BikerRadarQRPayload {
   createdAt: number;
 }
 
-export function generateBikerRadarJoinToken(): string {
+export type BikerRadarQRPayload = NamiQRPayload;
+
+export function generateNamiJoinToken(): string {
   const randomPart = Math.random().toString(36).substring(2, 10);
   const timePart = Date.now().toString(36);
   return `${randomPart}-${timePart}`;
 }
 
-export function generateBikerRadarQRPayload(
+export const generateBikerRadarJoinToken = generateNamiJoinToken;
+
+export function generateNamiQRPayload(
   rideId: string,
   roomCode: string,
   leaderId: string,
   joinToken: string
 ): string {
-  const payload: BikerRadarQRPayload = {
+  const payload: NamiQRPayload = {
     version: 1,
     rideId,
     roomCode: roomCode.toUpperCase().trim(),
@@ -28,10 +32,12 @@ export function generateBikerRadarQRPayload(
     createdAt: Date.now(),
   };
 
-  return `BIKERRADAR:${JSON.stringify(payload)}`;
+  return `NAMI:${JSON.stringify(payload)}`;
 }
 
-export function parseBikerRadarQRPayload(
+export const generateBikerRadarQRPayload = generateNamiQRPayload;
+
+export function parseNamiQRPayload(
   rawInput: string
 ): {
   rideId?: string;
@@ -44,11 +50,16 @@ export function parseBikerRadarQRPayload(
 
   let text = rawInput.trim();
 
-  if (text.startsWith('BIKERRADAR:')) {
-    const content = text.replace('BIKERRADAR:', '').trim();
+  // Support both NAMI: (current) and BIKERRADAR: (legacy) prefixes
+  const isNamiPrefix = text.startsWith('NAMI:');
+  const isLegacyPrefix = text.startsWith('BIKERRADAR:');
+
+  if (isNamiPrefix || isLegacyPrefix) {
+    const prefix = isNamiPrefix ? 'NAMI:' : 'BIKERRADAR:';
+    const content = text.replace(prefix, '').trim();
     if (content.startsWith('{')) {
       try {
-        const parsed = JSON.parse(content) as BikerRadarQRPayload;
+        const parsed = JSON.parse(content) as NamiQRPayload;
         if (parsed && (parsed.roomCode || parsed.rideId)) {
           return {
             rideId: parsed.rideId,
@@ -59,10 +70,10 @@ export function parseBikerRadarQRPayload(
           };
         }
       } catch (e) {
-        console.warn('Failed to parse BikerRadar QR JSON payload:', e);
+        console.warn('Failed to parse Nami QR JSON payload:', e);
       }
     } else {
-      // Legacy "BIKERRADAR:<ROOM_CODE>"
+      // Legacy "NAMI:<ROOM_CODE>" or "BIKERRADAR:<ROOM_CODE>"
       const code = content.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 6);
       if (code.length === 6) {
         return { roomCode: code };
@@ -70,7 +81,7 @@ export function parseBikerRadarQRPayload(
     }
   }
 
-  // Handle URL format: "https://bikerradar.app/join/<ROOM_CODE>"
+  // Handle URL formats: "https://nami.app/join/<ROOM_CODE>" or "https://bikerradar.app/join/<ROOM_CODE>"
   if (text.includes('/JOIN/')) {
     const code = text.split('/JOIN/')[1]?.split('?')[0]?.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 6);
     if (code && code.length === 6) {
@@ -86,3 +97,5 @@ export function parseBikerRadarQRPayload(
 
   return null;
 }
+
+export const parseBikerRadarQRPayload = parseNamiQRPayload;

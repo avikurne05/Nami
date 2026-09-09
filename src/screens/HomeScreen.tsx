@@ -244,7 +244,7 @@ export default function HomeScreen({ navigation }: Props) {
       const distance = formatDistance(selectedHistoryItem.totalDistance, preferences.distanceUnits);
       const duration = formatDuration(selectedHistoryItem.duration);
       await Share.share({
-        message: `Check out my ride on BikeRadar!\n\nDestination: ${selectedHistoryItem.destinationName}\nDistance: ${distance}\nDuration: ${duration}\nAvg Speed: ${formatSpeed(selectedHistoryItem.averageSpeed, preferences.distanceUnits)}\n\nRide together with BikeRadar!`,
+        message: `Check out my ride on Nami!\n\nDestination: ${selectedHistoryItem.destinationName}\nDistance: ${distance}\nDuration: ${duration}\nAvg Speed: ${formatSpeed(selectedHistoryItem.averageSpeed, preferences.distanceUnits)}\n\nRide together with Nami!`,
       });
     } catch (e) {
       console.error('Share failed:', e);
@@ -262,28 +262,38 @@ export default function HomeScreen({ navigation }: Props) {
     if (!itemToDelete) return;
     const target = itemToDelete;
     setItemToDelete(null);
+    setSelectedHistoryItem(null);
+
+    // 1. Remove from local React state immediately so card disappears instantly
+    setHistory((prev) => prev.filter((h) => h.id !== target.id));
+    showToast('Ride deleted successfully.', 'success');
+
     try {
-      await RideService.deleteRideHistory(target.id);
-      setHistory((prev) => prev.filter((h) => h.id !== target.id));
-      showToast('Ride deleted successfully.', 'success');
-      await fetchActiveRideAndHistory();
+      // 2. Delete Firestore history document
+      await RideService.deleteRideHistory(target.id, user?.uid, target.rideId);
     } catch (e) {
       console.error('Failed to delete history document:', e);
       showToast('Could not delete ride. Please try again.', 'error');
+      // Restore state if delete failed
+      await fetchActiveRideAndHistory();
     }
   };
 
   const confirmClearAllHistory = async () => {
     setShowClearAllModal(false);
     if (!user) return;
+
+    // 1. Clear local history state immediately
+    setHistory([]);
+
     try {
+      // 2. Delete all user history records in Firestore
       await RideService.clearAllRideHistory(user.uid);
-      setHistory([]);
       showToast('Ride history cleared.', 'success');
-      await fetchActiveRideAndHistory();
     } catch (e) {
       console.error('Failed to clear ride history:', e);
       showToast('Could not clear history. Please try again.', 'error');
+      await fetchActiveRideAndHistory();
     }
   };
 
