@@ -3,7 +3,7 @@ import 'dotenv/config';
 export default {
   expo: {
     name: 'Nami',
-    slug: 'bike-radar',
+    slug: 'nami',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
