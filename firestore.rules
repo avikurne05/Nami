@@ -31,12 +31,14 @@ service cloud.firestore {
       allow create: if request.auth != null 
         && request.resource.data.leaderId == request.auth.uid;
 
-      // Updating a ride is allowed for the leader or members joining/updating status
+      // Updating a ride is allowed for the leader, existing members, or new members joining
       allow update: if request.auth != null 
         && (
           resource.data.leaderId == request.auth.uid ||
-          request.auth.uid in resource.data.memberUids ||
-          request.auth.uid in request.resource.data.memberUids
+          (resource.data.members != null && request.auth.uid in resource.data.members) ||
+          (request.resource.data.members != null && request.auth.uid in request.resource.data.members) ||
+          (resource.data.memberUids != null && request.auth.uid in resource.data.memberUids) ||
+          (request.resource.data.memberUids != null && request.auth.uid in request.resource.data.memberUids)
         );
 
       // Only the ride leader can delete the ride document
@@ -88,17 +90,18 @@ service cloud.firestore {
     // 4. Ride History Master Collection
     // ------------------------------------------------------------------
     match /ride_history/{historyId} {
-      // Users can read ride history where their UID is in memberUids
-      allow read: if request.auth != null && (request.auth.uid in resource.data.memberUids || resource.data.memberUids == null);
+      // Users can read ride history
+      allow read: if request.auth != null;
 
-      // Allow creation of history documents upon ride completion if user is a member
+      // Allow creation of history documents upon ride completion
       allow create: if request.auth != null;
 
-      // Allow update of history documents if user is a member
-      allow update: if request.auth != null && request.auth.uid in resource.data.memberUids;
-
-      // Users can ONLY delete ride history entries where their UID is in memberUids
-      allow delete: if request.auth != null && request.auth.uid in resource.data.memberUids;
+      // Allow update and delete of history documents
+      allow update, delete: if request.auth != null && (
+        resource.data.memberUids == null ||
+        request.auth.uid in resource.data.memberUids ||
+        (resource.data.members != null && request.auth.uid in resource.data.members)
+      );
     }
   }
 }
